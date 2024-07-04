@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DBVersionSchema } from "../models/M_DBVersion";
+import { DBVersionSchema } from "../models/M_DBVersions_backup";
 import { PostGreSQLDB } from "../services/postgres";
 
 
