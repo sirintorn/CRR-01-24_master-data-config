@@ -23,10 +23,12 @@ export const TABLE_NAMES = {
 
 export interface TableRecord{
     id: any,
-    created_by: number,
-    updated_by: number,
-    created_at: number,
-    updated_at: number
+    created_by: any,
+    updated_by: any,
+    created_at: any,
+    updated_at: any,
+    deleted_by: any,
+    deleted_at: any,
 }
 
 export class TableRecordsSchema{

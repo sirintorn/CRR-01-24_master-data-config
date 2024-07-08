@@ -6,7 +6,8 @@
 //DOTENV: $ npm install dotenv
 //TYPESCRIPT: $ npm i -D typescript @types/express @types/node
 //NODEMON: $ npm i -D nodemon ts-node
-//KNEX (SQL Schema Builder): npm install knex --save
+//KNEX: (SQL Schema Builder): npm install knex --save
+//CUSTOM UUID: $ npm i custom-uuid
 
 import express from 'express';
 import dotenv from 'dotenv';
@@ -28,6 +29,7 @@ async function onStart() {
     try {
         console.log(`Server running on port ${PORT} - Project: ${NAME}`);
         //await PostGreSQLDB.DBClient.connectDB();  
+        console.log('testing uuid generator', IDGenerator.newUUID(), IDGenerator.newUUID(), IDGenerator.newUUID());
     } catch (error) {
         console.log(error);
     }
@@ -35,6 +37,7 @@ async function onStart() {
 
 import * as swaggerUI from "swagger-ui-express";
 import * as swaggerJSDoc from "swagger-jsdoc";
+import { IDGenerator } from './services/id_generator';
 
 const specs = swaggerJSDoc.default(CONFIGS.swaggerOptions);
 
