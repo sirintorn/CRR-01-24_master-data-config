@@ -7,7 +7,55 @@ export async function up(knex: Knex): Promise<void> {
         .alterTable(TABLE_NAMES.CanSizes, function(table){
             table.dropColumn('created_by');
             table.dropColumn('updated_by');
-        });
+        })
+        .alterTable(TABLE_NAMES.CanUnits, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.DBVersions, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.GeneralPricings, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductBasePricings, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductBases, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductCanSizes, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductGroups, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductShadeCodes, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductTinters, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.Products, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.SubProducts, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
+        .alterTable(TABLE_NAMES.TinterPricings, function(table){
+            table.dropColumn('created_by');
+            table.dropColumn('updated_by');
+        })
 }
 
 
@@ -16,6 +64,54 @@ export async function down(knex: Knex): Promise<void> {
         .alterTable(TABLE_NAMES.CanSizes, function(table){
             table.integer('created_by');
             table.integer('updated_by');
-        });
+        })
+        .alterTable(TABLE_NAMES.CanUnits, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.DBVersions, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.GeneralPricings, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductBasePricings, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductBases, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductCanSizes, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductGroups, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductShadeCodes, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.ProductTinters, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.Products, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.SubProducts, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
+        .alterTable(TABLE_NAMES.TinterPricings, function(table){
+            table.integer('created_by');
+            table.integer('updated_by');
+        })
 }
 
