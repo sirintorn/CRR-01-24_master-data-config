@@ -28,33 +28,33 @@ export async function up(knex: Knex): Promise<void> {
             table.string('product_id', 10);
         })
         .alterTable(TABLE_NAMES.ProductCanSizes, function(table){
-            table.string('db_version_id');
-            table.string('can_size_id');
-            table.string('product_id');
+            table.string('db_version_id', 10);
+            table.string('can_size_id', 10);
+            table.string('product_id', 10);
         })
         .alterTable(TABLE_NAMES.ProductGroups, function(table){
-            table.string('db_version_id');
+            table.string('db_version_id', 10);
         })
         .alterTable(TABLE_NAMES.ProductShadeCodes, function(table){
-            table.string('db_version_id');
-            table.string('product_id');
-            table.string('product_base_id');
-            table.string('sub_product_id');
-            table.string('can_size_id');
+            table.string('db_version_id', 10);
+            table.string('product_id', 10);
+            table.string('product_base_id', 10);
+            table.string('sub_product_id', 10);
+            table.string('can_size_id', 10);
         })
         .alterTable(TABLE_NAMES.ProductTinters, function(table){
-            table.string('db_version_id');
-            table.string('product_shade_code_id');
+            table.string('db_version_id', 10);
+            table.string('product_shade_code_id', 10);
         })
         .alterTable(TABLE_NAMES.Products, function(table){
-            table.string('db_version_id');
-            table.string('product_group_id');
+            table.string('db_version_id', 10);
+            table.string('product_group_id', 10);
         })
         .alterTable(TABLE_NAMES.SubProducts, function(table){
-            table.string('db_version_id');
+            table.string('db_version_id', 10);
         })
         .alterTable(TABLE_NAMES.TinterPricings, function(table){
-            table.string('db_version_id');
+            table.string('db_version_id', 10);
         })
 }
 
