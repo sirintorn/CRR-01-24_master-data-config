@@ -5,56 +5,56 @@ import { TABLE_NAMES } from "../db";
 export async function up(knex: Knex): Promise<void> {
     return knex.schema
         .alterTable(TABLE_NAMES.CanSizes, function(table){
-            table.string('db_version_id', 10);
-            table.string('can_unit_id', 10);
+            table.string('db_version_id', 10).notNullable();
+            table.string('can_unit_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.CanUnits, function(table){
-            table.string('db_version_id', 10);
+            table.string('db_version_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.DBVersions, function(table){
-            table.string('company_id', 10);
+            table.string('company_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.GeneralPricings, function(table){
-            table.string('db_version_id', 10);
-            table.string('can_size_id', 10);
+            table.string('db_version_id', 10).notNullable();
+            table.string('can_size_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.ProductBasePricings, function(table){
-            table.string('db_version_id', 10);
+            table.string('db_version_id', 10).notNullable();
             table.string('product_base_id', 10);
-            table.string('can_size_id', 10);
+            table.string('can_size_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.ProductBases, function(table){
-            table.string('db_version_id', 10);
-            table.string('product_id', 10);
+            table.string('db_version_id', 10).notNullable();
+            table.string('product_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.ProductCanSizes, function(table){
-            table.string('db_version_id', 10);
-            table.string('can_size_id', 10);
-            table.string('product_id', 10);
+            table.string('db_version_id', 10).notNullable();
+            table.string('can_size_id', 10).notNullable();
+            table.string('product_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.ProductGroups, function(table){
-            table.string('db_version_id', 10);
+            table.string('db_version_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.ProductShadeCodes, function(table){
-            table.string('db_version_id', 10);
-            table.string('product_id', 10);
-            table.string('product_base_id', 10);
-            table.string('sub_product_id', 10);
-            table.string('can_size_id', 10);
+            table.string('db_version_id', 10).notNullable();
+            table.string('product_id', 10).notNullable();
+            table.string('product_base_id', 10).notNullable();
+            table.string('sub_product_id', 10).notNullable();
+            table.string('can_size_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.ProductTinters, function(table){
-            table.string('db_version_id', 10);
-            table.string('product_shade_code_id', 10);
+            table.string('db_version_id', 10).notNullable();
+            table.string('product_shade_code_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.Products, function(table){
-            table.string('db_version_id', 10);
-            table.string('product_group_id', 10);
+            table.string('db_version_id', 10).notNullable();
+            table.string('product_group_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.SubProducts, function(table){
-            table.string('db_version_id', 10);
+            table.string('db_version_id', 10).notNullable();
         })
         .alterTable(TABLE_NAMES.TinterPricings, function(table){
-            table.string('db_version_id', 10);
+            table.string('db_version_id', 10).notNullable();
         })
 }
 
