@@ -1,12 +1,15 @@
 import * as knex from "knex";
 import * as knexFile from '../knexfile';
+import { IDGenerator } from "../src/services/id_generator";
 
+//env ==> "development", "staging". "production"
 const environment = process.env.NODE_ENV || "development";
 
 export const DB = knex.knex(knexFile.default[environment]);
 
 export const TABLE_NAMES = {
     DBVersions: 'DBVersions',
+    DBConfigs: 'DBConfigs',
     CanSizes: 'CanSizes',
     CanUnits: 'CanUnits',
     ProductCanSizes: 'ProductCanSizes',
@@ -62,6 +65,7 @@ export class TableRecordsSchema{
     }
 
     create(data: any): Promise<any>{
+        data.id = IDGenerator.newUUID();
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
             //insert data and ask to return id[]
@@ -87,7 +91,8 @@ export class TableRecordsSchema{
     delete(id: any): Promise<any>{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
-            table.where('id', id).delete().then((val) => {
+            //not an actual delete, just symbolically delete
+            table.where('id', id).update({'deleted_at': DB.fn.now()}).then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);

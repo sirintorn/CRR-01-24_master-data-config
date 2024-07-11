@@ -15,14 +15,9 @@ const config: { [key: string]: Knex.Config } = {
       directory: './db/migrations'
     }
   },
-
   staging: {
-    client: "postgresql",
-    connection: {
-      database: "my_db",
-      user: "username",
-      password: "password"
-    },
+    client: 'pg',
+    connection: process.env.DB_STAG_URL,
     pool: {
       min: 2,
       max: 10
@@ -31,14 +26,9 @@ const config: { [key: string]: Knex.Config } = {
       tableName: "knex_migrations"
     }
   },
-
   production: {
-    client: "postgresql",
-    connection: {
-      database: "my_db",
-      user: "username",
-      password: "password"
-    },
+    client: 'pg',
+    connection: process.env.DB_PROD_URL,
     pool: {
       min: 2,
       max: 10

@@ -26,5 +26,44 @@ export const CONFIGS = {
         apis: [
             "./src/routers/*.ts"
         ],
+    },
+    dbConfig: {
+        canSizeLookupModes: {
+            all: 'all',
+            productCanSize: 'product_can_size',
+            productBasePricing: 'product_base_pricing',
+        },
+        canSizeLookupKey: {
+            product: 'product',
+            subProduct: 'sub_product'
+        },
+        discountVisible: true,
+        vatVisible: true,
+        totalPriceRounding: 2,
+        totalPriceVisible: true,
+        tinterPriceVisible: true,
+        basePriceLookupModes: {
+            productBasePricing: 'product_base',
+            generalPricing: 'general',
+            noPricing: 'no_pricing'
+        },
+        tinterPriceMarkupPriceModes: {
+            default: 'default',
+            markup1: 'markup1',
+            markup2: 'markup2',
+            markup3: 'markup3'
+        },
+        basePriceMarkupPriceModes: {
+            default: 'default',
+            markup1: 'markup1',
+            markup2: 'markup2',
+            markup3: 'markup3'
+        },
+        basePriceVisible: true,
+        displayUnits: {
+            ml: 'ml',
+            g: 'g',
+            oz: 'oz'
+        }
     }
 };
