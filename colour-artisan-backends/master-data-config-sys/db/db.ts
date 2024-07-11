@@ -44,7 +44,7 @@ export class TableRecordsSchema{
     getAll(): Promise<any[]>{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
-            table.select('*').then((val) => {
+            table.select('*').where('deleted_at', null).then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);
@@ -55,7 +55,8 @@ export class TableRecordsSchema{
     get(id: any): Promise<any>{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
-            table.select('*').where('id', id).then((val) => {
+            //if the record was marked as deleted. it wont be quried.
+            table.select('*').where('id', id).where('deleted_at', null).then((val) => {
                 if(val.length > 0)resolve(val[0]);
                 else resolve(null);
             }).catch(error => {
@@ -93,6 +94,18 @@ export class TableRecordsSchema{
             const table = DB<any>(this.tableName);
             //not an actual delete, just symbolically delete
             table.where('id', id).update({'deleted_at': DB.fn.now()}).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    restore(id: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            //not an actual restore, just symbolically restore
+            table.where('id', id).update({'deleted_at': null, 'deleted_by': null}).then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);

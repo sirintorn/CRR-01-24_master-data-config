@@ -5,6 +5,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "start": "nodemon",
+    "staging": "NODE_ENV=staging PORT=4001 nodemon",
     "build": "tsc --project ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
