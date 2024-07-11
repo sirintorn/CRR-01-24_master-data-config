@@ -68,3 +68,16 @@ CanSizesRoute.route(path + '/:id').delete(async (req, res) => {
         res.status(400).send();
     }
 });
+
+// RESTPRE
+CanSizesRoute.route(path + '/:id').patch(async (req, res) => {
+    try {
+        const id = req.params.id;
+        const table = new CanSizesSchema();
+        const result: any = await table.restore(id);
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error) {
+        res.status(400).send();
+    }
+})

@@ -140,6 +140,7 @@ DBVersionsRoute.route(path + '/:id').delete(async (req, res) => {
     }
 });
 
+// RESTORE
 DBVersionsRoute.route(path + '/:id').patch(async (req, res) => {
     try {
         const id = req.params.id;
