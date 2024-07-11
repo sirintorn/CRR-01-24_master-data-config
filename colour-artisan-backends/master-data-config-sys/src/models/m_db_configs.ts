@@ -21,7 +21,7 @@ export interface DBConfig extends TableRecord{
     custom_ml_oz_unit: number,
 }
 
-export class TinterPricingsSchema extends TableRecordsSchema{
+export class DBConfigSchema extends TableRecordsSchema{
 
     constructor(){
         super(TABLE_NAMES.DBConfigs);

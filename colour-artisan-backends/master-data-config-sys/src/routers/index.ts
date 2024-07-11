@@ -27,6 +27,7 @@ import { ProductTintersRoute } from "./r_product_tinters";
 import { ProductsRoute } from "./r_products";
 import { SubProductsRoute } from "./r_sub_products";
 import { TinterPricingsRoute } from "./r_tinter_pricings";
+import { DBConfigsRoute } from "./r_db_configs";
 
 export const routes = Router();
 
@@ -56,3 +57,5 @@ routes.use(ProductsRoute);
 routes.use(SubProductsRoute);
 //13
 routes.use(TinterPricingsRoute);
+// 14
+routes.use(DBConfigsRoute);
