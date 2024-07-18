@@ -26,12 +26,12 @@ export const TABLE_NAMES = {
 
 export interface TableRecord{
     id: any,
-    created_by: any,
-    updated_by: any,
-    created_at: any,
-    updated_at: any,
-    deleted_by: any,
-    deleted_at: any,
+    created_by?: any,
+    updated_by?: any,
+    created_at?: any,
+    updated_at?: any,
+    deleted_by?: any,
+    deleted_at?: any,
 }
 
 export class TableRecordsSchema{
@@ -65,8 +65,11 @@ export class TableRecordsSchema{
         });
     }
 
-    create(data: any): Promise<any>{
-        data.id = IDGenerator.newUUID();
+    create(data: any, isNewId?: boolean): Promise<any>{
+        if(isNewId){
+            data.id = IDGenerator.newUUID();
+        }
+
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
             //insert data and ask to return id[]
@@ -94,6 +97,17 @@ export class TableRecordsSchema{
             const table = DB<any>(this.tableName);
             //not an actual delete, just symbolically delete
             table.where('id', id).update({'deleted_at': DB.fn.now()}).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    deleteMultiple(ids: any[]): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.whereIn('id', ids).update({'deleted_at': DB.fn.now()}).then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);

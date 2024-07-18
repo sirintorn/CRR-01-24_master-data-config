@@ -26,7 +26,7 @@ export class ProductBasePricingsSchema extends TableRecordsSchema{
     }
 
     create(data: ProductBasePricing): Promise<any[]>{
-        return super.create(data);
+        return super.create(data, true);
     }
 
     update(id: any, data: ProductBasePricing): Promise<any>{

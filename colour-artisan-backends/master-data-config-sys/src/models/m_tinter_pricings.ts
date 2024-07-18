@@ -30,7 +30,7 @@ export class TinterPricingsSchema extends TableRecordsSchema{
     }
 
     create(data: TinterPricing): Promise<any[]>{
-        return super.create(data);
+        return super.create(data, true);
     }
 
     update(id: any, data: TinterPricing): Promise<any>{

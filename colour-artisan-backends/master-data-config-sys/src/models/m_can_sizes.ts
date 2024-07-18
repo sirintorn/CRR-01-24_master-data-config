@@ -22,7 +22,7 @@ export class CanSizesSchema extends TableRecordsSchema{
     }
 
     create(data: CanSize): Promise<any[]>{
-        return super.create(data);
+        return super.create(data, true);
     }
 
     update(id: any, data: CanSize): Promise<any>{

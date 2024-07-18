@@ -37,7 +37,8 @@ SubProductsRoute.route(path).post(async (req, res) => {
         const result: any = await table.create(data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
+        if(error.status && error.status == 409) res.status(409).send();
         res.status(400).send();
     }
 });
@@ -51,7 +52,8 @@ SubProductsRoute.route(path + '/:id').put(async (req, res) => {
         const result: any = await table.update(id, data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
+        if(error.status && error.status == 409) res.status(409).send();
         res.status(400).send();
     }
 });

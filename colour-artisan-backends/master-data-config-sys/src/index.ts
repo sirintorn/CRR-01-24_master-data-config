@@ -11,10 +11,19 @@
 
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from "cors";
 import { routes } from './routers';
 import { CONFIGS } from './configs/configs';
 
 const app = express();
+
+const allowedOrigins = ['http://localhost:3000'];
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+//add cors allowance
+//app.use(cors(options));
+app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({}));
 
 app.use(express.json()); // parses incoming requests with JSON payloads
 app.use(express.urlencoded({ extended: true })); // parses incoming requests with urlencoded payloads
@@ -45,6 +54,8 @@ app.listen(PORT, onStart);
 
 //add swagger
 app.use(API_DOCS, swaggerUI.serve, swaggerUI.setup(specs, {explorer: true}));
+
+
 
 //add routers
 app.use(API, routes);

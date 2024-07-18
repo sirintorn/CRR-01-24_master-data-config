@@ -21,7 +21,7 @@ export class ProductCanSizesSchema extends TableRecordsSchema{
     }
 
     create(data: ProductCanSize): Promise<any[]>{
-        return super.create(data);
+        return super.create(data, true);
     }
 
     update(id: any, data: ProductCanSize): Promise<any>{

@@ -1,32 +1,32 @@
-export const CONFIGS = {
-    swaggerOptions: {
-        definition: {
-            openapi: "3.1.0",
-            info: {
-                title: "COLORIANCE: COLOUR ARTISAN APIs with Swagger",
-                version: "0.0.1",
-                description:
-                    "This is a simple CRUD API application made with Express and documented with Swagger",
-                /*license: {
-                    name: "MIT",
-                    url: "https://spdx.org/licenses/MIT.html",
-                },
-                contact: {
-                    name: "LogRocket",
-                    url: "https://logrocket.com",
-                    email: "info@email.com",
-                },*/
-            },
-            servers: [
-                {
-                    url: "http://localhost:4000",
-                },
-            ],
-        },
-        apis: [
-            "./src/routers/*.ts"
-        ],
-    },
+export interface DBConfig {
+    id: any,
+    db_version_id: any,
+    can_size_lookup_mode: any,
+    can_size_lookup_key: any,
+    discount: number,
+    discount_visible: boolean,
+    vat: number,
+    vat_visible: boolean,
+    total_price_rounding: number,
+    total_price_visible: boolean,
+    tinter_price_markup_price: number,
+    tinter_price_markup_price_mode: any,
+    tinter_price_visible: boolean,
+    base_price_lookup_mode: any,
+    base_price_markup_price: number,
+    base_price_markup_price_mode: any,
+    base_price_visible: boolean,
+    display_unit: string,
+    custom_ml_oz_unit: number,
+    created_by?: any,
+    updated_by?: any,
+    created_at?: any,
+    updated_at?: any,
+    deleted_by?: any,
+    deleted_at?: any,
+}
+
+export const CONFIGS_COPY = {
     dbConfig: {
         canSizeLookupModes: {
             all: 'all',

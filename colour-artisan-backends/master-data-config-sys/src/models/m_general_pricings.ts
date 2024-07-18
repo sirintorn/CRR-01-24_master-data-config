@@ -25,7 +25,7 @@ export class GeneralPricingsSchema extends TableRecordsSchema{
     }
 
     create(data: GeneralPricing): Promise<any[]>{
-        return super.create(data);
+        return super.create(data, true);
     }
 
     update(id: any, data: GeneralPricing): Promise<any>{

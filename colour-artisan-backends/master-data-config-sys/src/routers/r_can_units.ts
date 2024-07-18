@@ -35,9 +35,13 @@ CanUnitsRoute.route(path).post(async (req, res) => {
         const data = req.body as CanUnit;
         const table = new CanUnitsSchema();
         const result: any = await table.create(data);
-        if(result)res.status(200).json(result);   
-        else res.status(404).send();
-    } catch (error) {
+        if(result){
+            res.status(200).json(result);   
+        } else { 
+            res.status(404).send();
+        }
+    } catch (error: any) {
+        if(error.status && error.status == 409) res.status(409).send();
         res.status(400).send();
     }
 });
@@ -69,7 +73,7 @@ CanUnitsRoute.route(path + '/:id').delete(async (req, res) => {
     }
 });
 
-// RESTPRE
+// RESTORE
 CanUnitsRoute.route(path + '/:id').patch(async (req, res) => {
     try {
         const id = req.params.id;
@@ -80,4 +84,18 @@ CanUnitsRoute.route(path + '/:id').patch(async (req, res) => {
     } catch (error) {
         res.status(400).send();
     }
-})
+});
+
+//DELETE MULTIPLE
+CanUnitsRoute.route(path).delete(async (req, res) => {
+    try {
+        //res.send('thanks');
+        const ids = req.body as any[];
+        const table = new CanUnitsSchema();
+        const result: any = await table.deleteMultiple(ids);
+        if(result)res.status(200).json(result);   
+        else res.status(404).send('not found');
+    } catch (error) {
+        res.status(400).send();
+    }
+});

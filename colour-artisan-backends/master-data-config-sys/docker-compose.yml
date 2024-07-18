@@ -7,9 +7,9 @@ services:
       - dependencies:/usr/src/app/node_modules
     working_dir: /usr/src/app
     environment:
-      NODE_ENV: development
+      NODE_ENV: staging
     ports:
-      - 4001:4001
+      - 4000:4000
     command: npm run staging
 volumes:
   dependencies:

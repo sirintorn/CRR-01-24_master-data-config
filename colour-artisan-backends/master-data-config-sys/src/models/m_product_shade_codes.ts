@@ -2,6 +2,7 @@ import {TABLE_NAMES, TableRecord, TableRecordsSchema} from '../../db/db';
 
 export interface ProductShadeCode extends TableRecord{
     db_version_id: any,
+    product_group_id: any,
     product_id: any,
     shade_code: string,
     shade_name: string,
@@ -28,7 +29,7 @@ export class ProductShadeCodesSchema extends TableRecordsSchema{
     }
 
     create(data: ProductShadeCode): Promise<any[]>{
-        return super.create(data);
+        return super.create(data, true);
     }
 
     update(id: any, data: ProductShadeCode): Promise<any>{

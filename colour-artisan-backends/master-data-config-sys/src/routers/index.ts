@@ -27,6 +27,10 @@ import { ProductTintersRoute } from "./r_product_tinters";
 import { ProductsRoute } from "./r_products";
 import { SubProductsRoute } from "./r_sub_products";
 import { TinterPricingsRoute } from "./r_tinter_pricings";
+import { XUnitOfMeasurementRoute } from "./x_unit_of_measurement";
+import { XTempTest } from "./x_temp_test";
+import { DBConfigsRoute } from "./r_db_configs";
+import { XProductGroupRoute } from "./x_product_group";
 
 export const routes = Router();
 
@@ -56,3 +60,11 @@ routes.use(ProductsRoute);
 routes.use(SubProductsRoute);
 //13
 routes.use(TinterPricingsRoute);
+//14
+routes.use(XUnitOfMeasurementRoute);
+//15
+routes.use(DBConfigsRoute);
+//16
+routes.use(XProductGroupRoute);
+
+routes.use(XTempTest);

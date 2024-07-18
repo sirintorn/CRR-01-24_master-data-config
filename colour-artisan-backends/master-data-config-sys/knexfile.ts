@@ -15,6 +15,13 @@ const config: { [key: string]: Knex.Config } = {
       directory: './db/migrations'
     }
   },
+  lan:{
+    client: 'pg',
+    connection: process.env.DB_LAN_URL,
+    migrations: {
+      directory: './db/migrations'
+    }
+  },
   staging: {
     client: 'pg',
     connection: process.env.DB_STAG_URL,
@@ -23,7 +30,7 @@ const config: { [key: string]: Knex.Config } = {
       max: 10
     },
     migrations: {
-      tableName: "knex_migrations"
+      directory: './db/migrations'
     }
   },
   production: {

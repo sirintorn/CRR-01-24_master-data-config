@@ -25,7 +25,7 @@ export class ProductTintersSchema extends TableRecordsSchema{
     }
 
     create(data: ProductTinter): Promise<any[]>{
-        return super.create(data);
+        return super.create(data, true);
     }
 
     update(id: any, data: ProductTinter): Promise<any>{

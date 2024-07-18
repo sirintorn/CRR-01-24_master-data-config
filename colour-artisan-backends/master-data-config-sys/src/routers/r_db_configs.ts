@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *   schemas:
- *     DBVersion:
+ *     DBConfig:
  *       type: object
  *       required:
  *         - company_id
@@ -55,7 +55,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/DBVersion'
+ *             $ref: '#/components/schemas/DBConfig'
  *     responses:
  *       200:
  *         description: The created record id.
@@ -70,17 +70,17 @@
  *
  */
 import { Router } from "express";
-import { DBVersion, DBVersionsSchema } from "../models/m_db_versions";
+import { DBConfig, DBConfigsSchema } from "../models/m_db_configs";
 
-export const DBVersionsRoute = Router();
+export const DBConfigsRoute = Router();
 
-const path = '/db-versions';
+const path = '/db-configs';
 
 //GET ALL
-DBVersionsRoute.route(path).get(async (req, res) => {
+DBConfigsRoute.route(path).get(async (req, res) => {
     try {
-        const table = new DBVersionsSchema();
-        const result: DBVersion[] = await table.getAll();
+        const table = new DBConfigsSchema();
+        const result: DBConfig[] = await table.getAll();
         res.status(200).json(result);   
     } catch (error) {
         res.status(400).send();
@@ -88,11 +88,11 @@ DBVersionsRoute.route(path).get(async (req, res) => {
 });
 
 //GET
-DBVersionsRoute.route(path + '/:id').get(async (req, res) => {
+DBConfigsRoute.route(path + '/:id').get(async (req, res) => {
     try {
         const id = req.params.id;
-        const table = new DBVersionsSchema();
-        const result: DBVersion = await table.get(id);
+        const table = new DBConfigsSchema();
+        const result: DBConfig = await table.get(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error) {
@@ -101,11 +101,11 @@ DBVersionsRoute.route(path + '/:id').get(async (req, res) => {
 });
 
 //CREATE
-DBVersionsRoute.route(path).post(async (req, res) => {
+DBConfigsRoute.route(path).post(async (req, res) => {
     //res.set('Access-Control-Allow-Origin', '*');
     try {
         const data = req.body;
-        const table = new DBVersionsSchema();
+        const table = new DBConfigsSchema();
         const result: any = await table.create(data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
@@ -115,11 +115,11 @@ DBVersionsRoute.route(path).post(async (req, res) => {
 });
 
 //UPDATE
-DBVersionsRoute.route(path + '/:id').put(async (req, res) => {
+DBConfigsRoute.route(path + '/:id').put(async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
-        const table = new DBVersionsSchema();
+        const table = new DBConfigsSchema();
         const result: any = await table.update(id, data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
@@ -129,10 +129,10 @@ DBVersionsRoute.route(path + '/:id').put(async (req, res) => {
 });
 
 //DELETE
-DBVersionsRoute.route(path + '/:id').delete(async (req, res) => {
+DBConfigsRoute.route(path + '/:id').delete(async (req, res) => {
     try {
         const id = req.params.id;
-        const table = new DBVersionsSchema();
+        const table = new DBConfigsSchema();
         const result: any = await table.delete(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
@@ -142,28 +142,13 @@ DBVersionsRoute.route(path + '/:id').delete(async (req, res) => {
 });
 
 // RESTORE
-DBVersionsRoute.route(path + '/:id').patch(async (req, res) => {
+DBConfigsRoute.route(path + '/:id').patch(async (req, res) => {
     try {
         const id = req.params.id;
-        const table = new DBVersionsSchema();
+        const table = new DBConfigsSchema();
         const result: any = await table.restore(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
-        res.status(400).send();
-    }
-});
-
-
-//////BUSINESS LOGICS 
-
-//GET BY COMPANY ID
-DBVersionsRoute.route(path + '/by-company/:id').get(async (req, res) => {
-    try {
-        const id = req.params.id;
-        const table = new DBVersionsSchema();
-        const result: Array<DBVersion> = await table.getByCompanyId(id);
-        res.status(200).json(result);   
     } catch (error) {
         res.status(400).send();
     }
