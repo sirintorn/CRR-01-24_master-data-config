@@ -13,7 +13,7 @@ ProductCanSizesRoute.route(path).get(async (req, res) => {
         const result: ProductCanSize[] = await table.getAll();
         res.status(200).json(result);   
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 });
 
@@ -26,7 +26,7 @@ ProductCanSizesRoute.route(path + '/:id').get(async (req, res) => {
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 });
 
@@ -39,7 +39,7 @@ ProductCanSizesRoute.route(path).post(async (req, res) => {
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 });
 
@@ -53,7 +53,7 @@ ProductCanSizesRoute.route(path + '/:id').put(async (req, res) => {
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 });
 
@@ -66,7 +66,7 @@ ProductCanSizesRoute.route(path + '/:id').delete(async (req, res) => {
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 });
 
@@ -79,6 +79,6 @@ ProductCanSizesRoute.route(path + '/:id').patch(async (req, res) => {
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 })

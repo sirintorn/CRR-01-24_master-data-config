@@ -28,7 +28,7 @@ XTempTest.route(path).get(async (req, res) => {
             };*/
             //res.status(200).send([mockup]);
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 });
 

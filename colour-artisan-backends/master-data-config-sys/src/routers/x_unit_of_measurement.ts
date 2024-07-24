@@ -20,7 +20,7 @@ XUnitOfMeasurementRoute.route(path + '/:id').get(async (req, res) => {
         };
         res.status(200).json(result);   
     } catch (error: any) {
-        res.status(400).send();
+        res.status(400).send(error);
     }
 });
 
