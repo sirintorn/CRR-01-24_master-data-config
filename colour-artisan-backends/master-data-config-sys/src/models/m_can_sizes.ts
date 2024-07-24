@@ -1,4 +1,4 @@
-import {TABLE_NAMES, TableRecord, TableRecordsSchema} from '../../db/db';
+import {DB, TABLE_NAMES, TableRecord, TableRecordsSchema} from '../../db/db';
 
 export interface CanSize extends TableRecord{
     db_version_id: any,
@@ -32,6 +32,19 @@ export class CanSizesSchema extends TableRecordsSchema{
     delete(id: any): Promise<any> {
         return super.delete(id);
     }
+
+    //BUSINESS LOGICS
+    getByDBVersion(db_version_id: any): Promise<CanSize[]> {
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*').where('db_version_id', db_version_id).where('deleted_at', null).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
 }
 
 

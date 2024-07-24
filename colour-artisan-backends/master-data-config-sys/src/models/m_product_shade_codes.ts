@@ -42,11 +42,39 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
     }
 
     create(data: ProductShadeCode): Promise<any[]> {
-        return super.create(data, true);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const table = DB<any>(this.tableName);
+                const vals = await table.select('*').where('db_version_id', data.db_version_id).where('shade_code', data.shade_code).orWhere('shade_name', data.shade_name).where('deleted_at', null);
+                if(vals.length > 0){
+                    reject({status: 409});
+                }else{
+                    const result = await super.create(data, true);  
+                    resolve(result);  
+                }
+            } catch (error: any) {
+                reject({status: 400, error: error});
+            }
+        });
+        //return super.create(data, true);
     }
 
     update(id: any, data: ProductShadeCode): Promise<any> {
-        return super.update(id, data);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const table = DB<any>(this.tableName);
+                const vals = await table.select('*').where('db_version_id', data.db_version_id).where('shade_code', data.shade_code).orWhere('shade_name', data.shade_name).where('deleted_at', null);
+                if(vals.length > 0){
+                    reject({status: 409});
+                }else{
+                    const result = await super.update(id, data);  
+                    resolve(result);  
+                }
+            } catch (error: any) {
+                reject({status: 400});
+            }
+        });
+        //return super.update(id, data);
     }
 
     delete(id: any): Promise<any> {
