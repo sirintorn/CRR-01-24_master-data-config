@@ -83,8 +83,6 @@ ProductShadeCodesRoute.route(path + '/:id').patch(async (req, res) => {
     }
 })
 
-
-
 ///BUSINESS LOGICS
 
 //GET BY DB VERSION FILTERED
@@ -118,10 +116,10 @@ ProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id').get(async (
         const count = await table.getByDBVersionFilteredCount(db_version_id, searchFilters);
 
         const result = {
+            items: items,
+            count: Number(count[0].count),
             searchFilters: searchFilters,
             paginationConfig: paginationConfig,
-            items: items,
-            count: Number(count[0].count)
         }
         if(result)res.status(200).json(result);   
         else res.status(404).send();

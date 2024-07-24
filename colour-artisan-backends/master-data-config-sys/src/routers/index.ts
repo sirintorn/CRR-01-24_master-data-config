@@ -31,6 +31,7 @@ import { XUnitOfMeasurementRoute } from "./x_unit_of_measurement";
 import { XTempTest } from "./x_temp_test";
 import { DBConfigsRoute } from "./r_db_configs";
 import { XProductGroupRoute } from "./x_product_group";
+import { XProductRoute } from "./x_product";
 
 export const routes = Router();
 
@@ -66,5 +67,7 @@ routes.use(XUnitOfMeasurementRoute);
 routes.use(DBConfigsRoute);
 //16
 routes.use(XProductGroupRoute);
+//17
+routes.use(XProductRoute);
 
 routes.use(XTempTest);
