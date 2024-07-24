@@ -12,7 +12,7 @@ ProductsRoute.route(path).get(async (req, res) => {
         const table = new ProductsSchema();
         const result: Product[] = await table.getAll();
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -25,7 +25,7 @@ ProductsRoute.route(path + '/:id').get(async (req, res) => {
         const result: Product = await table.get(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -38,8 +38,9 @@ ProductsRoute.route(path).post(async (req, res) => {
         const result: any = await table.create(data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
-        res.status(400).send();
+    } catch (error: any) {
+        if(error.status && error.status == 409) res.status(409).send();
+        else res.status(400).send();
     }
 });
 
@@ -52,8 +53,9 @@ ProductsRoute.route(path + '/:id').put(async (req, res) => {
         const result: any = await table.update(id, data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
-        res.status(400).send();
+    } catch (error: any) {
+        if(error.status && error.status == 409) res.status(409).send();
+        else res.status(400).send();
     }
 });
 
@@ -65,7 +67,7 @@ ProductsRoute.route(path + '/:id').delete(async (req, res) => {
         const result: any = await table.delete(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -78,7 +80,7 @@ ProductsRoute.route(path + '/:id').patch(async (req, res) => {
         const result: any = await table.restore(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -88,11 +90,13 @@ ProductsRoute.route(path + '/:id').patch(async (req, res) => {
 ProductsRoute.route(path + '/by-db-version/:db_version_id').get(async (req, res) => {
     try {
         const db_version_id = req.params.db_version_id;
+
         const table = new ProductsSchema();
         const result: Array<Product> = await table.getByDBVersion(db_version_id);
+
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });

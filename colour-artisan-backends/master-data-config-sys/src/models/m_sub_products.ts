@@ -29,8 +29,8 @@ export class SubProductsSchema extends TableRecordsSchema {
                     const result = await super.create(data, true);  
                     resolve(result);  
                 }
-            } catch (error) {
-                throw error;
+            } catch (error: any) {
+                reject({status: 400});
             }
         });
     }
@@ -46,8 +46,8 @@ export class SubProductsSchema extends TableRecordsSchema {
                     const result = await super.update(id, data);  
                     resolve(result);  
                 }
-            } catch (error) {
-                throw error;
+            } catch (error: any) {
+                reject({status: 400});
             }
         });
     }

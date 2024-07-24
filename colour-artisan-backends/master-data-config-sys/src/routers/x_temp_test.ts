@@ -7,7 +7,6 @@ const path = '/temp-test';
 
 XTempTest.route(path).get(async (req, res) => {
     try {
-
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
@@ -28,7 +27,7 @@ XTempTest.route(path).get(async (req, res) => {
                 createdat: (new Date()).toISOString()
             };*/
             //res.status(200).send([mockup]);
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });

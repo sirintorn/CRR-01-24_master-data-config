@@ -12,7 +12,7 @@ DBVersionsRoute.route(path).get(async (req, res) => {
     try {
         const result: any = await DBVersionSchema.getAll(PostGreSQLDB.DBClient);
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(500);
     }
 });
@@ -24,7 +24,7 @@ DBVersionsRoute.route(path + '/:id').get(async (req, res) => {
         const result: any = await DBVersionSchema.getByID(PostGreSQLDB.DBClient, id);
         if(result != null)res.status(200).json(result);   
         else res.status(400);
-    } catch (error) {
+    } catch (error: any) {
         res.status(500);
     }
 });

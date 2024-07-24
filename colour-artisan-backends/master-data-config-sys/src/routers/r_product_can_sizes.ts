@@ -12,7 +12,7 @@ ProductCanSizesRoute.route(path).get(async (req, res) => {
         const table = new ProductCanSizesSchema();
         const result: ProductCanSize[] = await table.getAll();
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -25,7 +25,7 @@ ProductCanSizesRoute.route(path + '/:id').get(async (req, res) => {
         const result: ProductCanSize = await table.get(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -38,7 +38,7 @@ ProductCanSizesRoute.route(path).post(async (req, res) => {
         const result: any = await table.create(data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -52,7 +52,7 @@ ProductCanSizesRoute.route(path + '/:id').put(async (req, res) => {
         const result: any = await table.update(id, data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -65,7 +65,7 @@ ProductCanSizesRoute.route(path + '/:id').delete(async (req, res) => {
         const result: any = await table.delete(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -78,7 +78,7 @@ ProductCanSizesRoute.route(path + '/:id').patch(async (req, res) => {
         const result: any = await table.restore(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 })

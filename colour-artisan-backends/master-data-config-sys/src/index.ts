@@ -11,19 +11,24 @@
 
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from "cors";
 import { routes } from './routers';
 import { CONFIGS } from './configs/configs';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000'];
-const options: cors.CorsOptions = {
+
+import cors from 'cors';
+app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({}));
+
+//var cors = require('cors');
+//app.use(cors());
+//const allowedOrigins = ['http://localhost:3000'];
+/*const options: cors.CorsOptions = {
   origin: allowedOrigins
-};
+};*/
 //add cors allowance
 //app.use(cors(options));
-app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({}));
+
 
 app.use(express.json()); // parses incoming requests with JSON payloads
 app.use(express.urlencoded({ extended: true })); // parses incoming requests with urlencoded payloads
@@ -39,7 +44,7 @@ async function onStart() {
         console.log(`Server running on port ${PORT} - Project: ${NAME}`);
         //await PostGreSQLDB.DBClient.connectDB();  
         console.log('testing uuid generator', IDGenerator.newUUID(), IDGenerator.newUUID(), IDGenerator.newUUID());
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
     }
 }

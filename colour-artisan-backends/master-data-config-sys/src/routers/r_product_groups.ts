@@ -12,7 +12,7 @@ ProductGroupsRoute.route(path).get(async (req, res) => {
         const table = new ProductGroupsSchema();
         const result: ProductGroup[] = await table.getAll();
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -25,7 +25,7 @@ ProductGroupsRoute.route(path + '/:id').get(async (req, res) => {
         const result: ProductGroup = await table.get(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -40,7 +40,7 @@ ProductGroupsRoute.route(path).post(async (req, res) => {
         else res.status(404).send();
     } catch (error: any) {
         if(error.status && error.status == 409) res.status(409).send();
-        res.status(400).send();
+        else res.status(400).send();
     }
 });
 
@@ -55,7 +55,7 @@ ProductGroupsRoute.route(path + '/:id').put(async (req, res) => {
         else res.status(404).send();
     } catch (error: any) {
         if(error.status && error.status == 409) res.status(409).send();
-        res.status(400).send();
+        else res.status(400).send();
     }
 });
 
@@ -67,7 +67,7 @@ ProductGroupsRoute.route(path + '/:id').delete(async (req, res) => {
         const result: any = await table.delete(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -80,7 +80,24 @@ ProductGroupsRoute.route(path + '/:id').patch(async (req, res) => {
         const result: any = await table.restore(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
-})
+});
+
+///BUSINESS LOGICS
+
+//GET BY DB VERSION
+ProductGroupsRoute.route(path + '/by-db-version/:db_version_id').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+        
+        const table = new ProductGroupsSchema();
+        const result: Array<ProductGroup> = await table.getByDBVersion(db_version_id);
+
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send();
+    }
+});

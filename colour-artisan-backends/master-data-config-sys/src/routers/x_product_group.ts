@@ -23,7 +23,7 @@ XProductGroupRoute.route(path + '/:db_version_id').get(async (req, res) => {
             subProducts: subProducts
         };
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });

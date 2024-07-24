@@ -19,7 +19,7 @@ XUnitOfMeasurementRoute.route(path + '/:id').get(async (req, res) => {
             canUnits: canUnits
         };
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });

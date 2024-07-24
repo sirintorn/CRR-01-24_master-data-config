@@ -37,7 +37,7 @@ export class PostGreSQLDB {
                 .connect();
             console.log(`Connected to PostgreSQL database; host=${this.host}`);
             this.isConnected = true;
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error connecting to PostgreSQL database', error);
             this.isConnected = false;
         }

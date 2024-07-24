@@ -11,7 +11,7 @@ CanUnitsRoute.route(path).get(async (req, res) => {
         const table = new CanUnitsSchema();
         const result: CanUnit[] = await table.getAll();
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -24,7 +24,7 @@ CanUnitsRoute.route(path + '/:id').get(async (req, res) => {
         const result: CanUnit = await table.get(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -55,7 +55,7 @@ CanUnitsRoute.route(path + '/:id').put(async (req, res) => {
         const result: any = await table.update(id, data);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -68,7 +68,7 @@ CanUnitsRoute.route(path + '/:id').delete(async (req, res) => {
         const result: any = await table.delete(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -81,7 +81,7 @@ CanUnitsRoute.route(path + '/:id').patch(async (req, res) => {
         const result: any = await table.restore(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -95,7 +95,7 @@ CanUnitsRoute.route(path).delete(async (req, res) => {
         const result: any = await table.deleteMultiple(ids);
         if(result)res.status(200).json(result);   
         else res.status(404).send('not found');
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });

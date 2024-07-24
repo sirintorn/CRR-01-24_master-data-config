@@ -11,7 +11,7 @@ SubProductsRoute.route(path).get(async (req, res) => {
         const table = new SubProductsSchema();
         const result: SubProduct[] = await table.getAll();
         res.status(200).json(result);   
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -24,7 +24,7 @@ SubProductsRoute.route(path + '/:id').get(async (req, res) => {
         const result: SubProduct = await table.get(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -66,7 +66,7 @@ SubProductsRoute.route(path + '/:id').delete(async (req, res) => {
         const result: any = await table.delete(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 });
@@ -79,7 +79,7 @@ SubProductsRoute.route(path + '/:id').patch(async (req, res) => {
         const result: any = await table.restore(id);
         if(result)res.status(200).json(result);   
         else res.status(404).send();
-    } catch (error) {
+    } catch (error: any) {
         res.status(400).send();
     }
 })
