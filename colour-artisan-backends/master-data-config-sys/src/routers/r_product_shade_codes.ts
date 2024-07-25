@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PaginationConfig, ProductShadeCode, ProductShadeCodesSchema, SearchFilters } from "../models/m_product_shade_codes";
+import { ProductTintersSchema } from "../models/m_product_tinters";
 
 
 export const ProductShadeCodesRoute = Router();
@@ -124,6 +125,29 @@ ProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id').get(async (
             paginationConfig: paginationConfig,
         }
         if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+
+///DELETE MULTIPLE
+ProductShadeCodesRoute.route(path + '/multiple/delete').delete(async (req, res) => {
+    try {
+        const ids = req.body as any[];
+        const table = new ProductShadeCodesSchema();
+        const result: any = await table.deleteMultiple(ids);
+
+        const productTintersSchema = new ProductTintersSchema();
+        const result2: any = await productTintersSchema.deleteByProductShadeCodesMultiple(ids);            
+
+        const resultDone = {
+            _productShadeCodes: result,
+            _productTinters: result2
+        }
+
+        if(result)res.status(200).json(resultDone);   
         else res.status(404).send();
     } catch (error: any) {
         res.status(400).send(error);

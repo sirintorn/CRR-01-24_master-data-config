@@ -172,6 +172,10 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
         })
     }
 
+    deleteMultiple(ids: any[]): Promise<any> {
+        return super.deleteMultiple(ids);
+    }
+
 
 }
 

@@ -69,7 +69,6 @@ export class TableRecordsSchema{
         if(isNewId){
             data.id = IDGenerator.newUUID();
         }
-
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
             //insert data and ask to return id[]
@@ -79,6 +78,22 @@ export class TableRecordsSchema{
                 reject(error);
             });
         });
+    }
+
+    createMultiple(datas: any[], isNewId?: boolean): Promise<any>{
+        if(isNewId){
+            datas.forEach((item) => item.id = IDGenerator.newUUID());
+        }
+
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            //insert data and ask to return id[]
+            table.insert(datas, ['id']).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        })
     }
 
     update(id: any, data: any): Promise<any>{

@@ -1,6 +1,6 @@
-import {TABLE_NAMES, TableRecord, TableRecordsSchema} from '../../db/db';
+import { DB, TABLE_NAMES, TableRecord, TableRecordsSchema } from '../../db/db';
 
-export interface TinterPricing extends TableRecord{
+export interface TinterPricing extends TableRecord {
     db_version_id: any,
     tinter_code: string,
     tinter_name: string,
@@ -15,30 +15,43 @@ export interface TinterPricing extends TableRecord{
     default_mark_up_price: number,
 }
 
-export class TinterPricingsSchema extends TableRecordsSchema{
+export class TinterPricingsSchema extends TableRecordsSchema {
 
-    constructor(){
+    constructor() {
         super(TABLE_NAMES.TinterPricings);
     }
 
-    getAll(): Promise<TinterPricing[]>{
+    getAll(): Promise<TinterPricing[]> {
         return super.getAll();
     }
 
-    get(id: any): Promise<TinterPricing>{
+    get(id: any): Promise<TinterPricing> {
         return super.get(id);
     }
 
-    create(data: TinterPricing): Promise<any[]>{
+    create(data: TinterPricing): Promise<any[]> {
         return super.create(data, true);
     }
 
-    update(id: any, data: TinterPricing): Promise<any>{
+    update(id: any, data: TinterPricing): Promise<any> {
         return super.update(id, data);
     }
 
     delete(id: any): Promise<any> {
         return super.delete(id);
+    }
+
+
+    ///BUSINESS LOGICS
+    getByDBVersion(db_version_id: any): Promise<TinterPricing[]> {
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*').where('db_version_id', db_version_id).where('deleted_at', null).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }
 

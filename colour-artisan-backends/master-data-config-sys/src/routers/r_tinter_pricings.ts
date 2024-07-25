@@ -80,4 +80,22 @@ TinterPricingsRoute.route(path + '/:id').patch(async (req, res) => {
     } catch (error: any) {
         res.status(400).send(error);
     }
-})
+});
+
+
+///BUSINESS LOGICS
+
+//GET BY DB VERSION
+TinterPricingsRoute.route(path + '/by-db-version/:db_version_id').get(async(req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+
+        const table = new TinterPricingsSchema();
+        const result: Array<TinterPricing> = await table.getByDBVersion(db_version_id);
+
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});

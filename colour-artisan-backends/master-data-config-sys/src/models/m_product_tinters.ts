@@ -1,4 +1,4 @@
-import {TABLE_NAMES, TableRecord, TableRecordsSchema} from '../../db/db';
+import {DB, TABLE_NAMES, TableRecord, TableRecordsSchema} from '../../db/db';
 
 export interface ProductTinter extends TableRecord{
     db_version_id: any,
@@ -34,6 +34,45 @@ export class ProductTintersSchema extends TableRecordsSchema{
 
     delete(id: any): Promise<any> {
         return super.delete(id);
+    }
+
+
+
+    ///BUSINESS LOGICS
+    ///CREATE MULTIPLE
+    createMultiple(datas: any[]): Promise<any[]>{
+        return super.createMultiple(datas, true);
+    }
+
+
+    ///DELETE MULTPLES
+    deleteMultiple(ids: any[]): Promise<any> {
+        return super.deleteMultiple(ids)
+    }
+
+    ///DELETE BY PRODUCT SHADE CODE
+    deleteByProductShadeCode(product_shade_code_id: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            //not an actual delete, just symbolically delete
+            table.where('product_shade_code_id', product_shade_code_id).update({'deleted_at': DB.fn.now()}).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    deleteByProductShadeCodesMultiple(ids: any[]): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            //not an actual delete, just symbolically delete
+            table.whereIn('product_shade_code_id', ids).update({'deleted_at': DB.fn.now()}).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }
 
