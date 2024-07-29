@@ -42,7 +42,7 @@ CanUnitsRoute.route(path).post(async (req, res) => {
         }
     } catch (error: any) {
         if(error.status && error.status == 409) res.status(409).send();
-        res.status(400).send(error);
+        else res.status(400).send(error);
     }
 });
 
