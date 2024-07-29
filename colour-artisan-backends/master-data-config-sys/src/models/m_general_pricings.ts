@@ -1,6 +1,6 @@
-import {TABLE_NAMES, TableRecord, TableRecordsSchema} from '../../db/db';
+import { DB, TABLE_NAMES, TableRecord, TableRecordsSchema } from '../../db/db';
 
-export interface GeneralPricing extends TableRecord{
+export interface GeneralPricing extends TableRecord {
     db_version_id: any,
     can_size_id: any,
     price: number,
@@ -10,30 +10,42 @@ export interface GeneralPricing extends TableRecord{
     default_mark_up_price: number,
 }
 
-export class GeneralPricingsSchema extends TableRecordsSchema{
+export class GeneralPricingsSchema extends TableRecordsSchema {
 
-    constructor(){
+    constructor() {
         super(TABLE_NAMES.GeneralPricings);
     }
 
-    getAll(): Promise<GeneralPricing[]>{
+    getAll(): Promise<GeneralPricing[]> {
         return super.getAll();
     }
 
-    get(id: any): Promise<GeneralPricing>{
+    get(id: any): Promise<GeneralPricing> {
         return super.get(id);
     }
 
-    create(data: GeneralPricing): Promise<any[]>{
-        return super.create(data, true);
+    create(data: GeneralPricing): Promise<any[]> {
+        return super.create(data, false);
     }
 
-    update(id: any, data: GeneralPricing): Promise<any>{
+    update(id: any, data: GeneralPricing): Promise<any> {
         return super.update(id, data);
     }
 
     delete(id: any): Promise<any> {
         return super.delete(id);
+    }
+
+    ////BUSINESS LOGICS
+    getByDBVersion(db_version_id: any): Promise<GeneralPricing[]> {
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*').where('db_version_id', db_version_id).where('deleted_at', null).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }
 

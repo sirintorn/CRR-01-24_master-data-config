@@ -83,4 +83,4 @@ ProductBasesRoute.route(path + '/:id').patch(async (req, res) => {
     } catch (error: any) {
         res.status(400).send(error);
     }
-})
+});
