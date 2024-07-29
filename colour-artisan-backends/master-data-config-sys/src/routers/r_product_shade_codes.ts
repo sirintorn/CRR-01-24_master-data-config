@@ -123,23 +123,44 @@ ProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id').get(async (
         const items: any[]  = await table.getByDBVersionFiltered(db_version_id, searchFilters, paginationConfig);
         const count = await table.getByDBVersionFilteredCount(db_version_id, searchFilters);
 
+        const pgSchema = new ProductGroupsSchema();
+        const pgs = await pgSchema.getByDBVersion(db_version_id);
+
+        const pSchmea = new ProductsSchema();
+        const ps = await pSchmea.getByDBVersion(db_version_id);
+
+        const pbSchema = new ProductBasesSchema();
+        const pbs = await pbSchema.getByDBVersion(db_version_id);
+
+        const spSchema = new SubProductsSchema();
+        const sps = await spSchema.getByDBVersion(db_version_id);
+        
+        const csSchema = new CanSizesSchema();
+        const css = await csSchema.getByDBVersion(db_version_id);
+
+
         for (let i = 0; i < items.length; i++) {
             const record = items[i];
 
-            const pgS = new ProductGroupsSchema();
-            const pg = await pgS.get(record.product_group_id);
+            const pg = pgs.find((value) => {
+                if(value.id == record.product_group_id) return value;
+            });
 
-            const pS = new ProductsSchema();
-            const p = await pS.get(record.product_id);
+            const p = ps.find((value) => {
+                if(value.id == record.product_id) return value;
+            });
 
-            const pbS = new ProductBasesSchema();
-            const pb = await pbS.get(record.product_base_id);
+            const pb = pbs.find((value) => {
+                if(value.id == record.product_base_id) return value;
+            });
 
-            const spS = new SubProductsSchema();
-            const sp = await spS.get(record.sub_product_id);
+            const sp = sps.find((value) => {
+                if(value.id == record.sub_product_id) return value;
+            });
             
-            const csS = new CanSizesSchema();
-            const cs = await csS.get(record.can_size_id);
+            const cs = css.find((value) => {
+                if(value.id == record.can_size_id) return value;
+            });
 
             record['_data'] = {
                 product_group: pg,
@@ -180,6 +201,43 @@ ProductShadeCodesRoute.route(path + '/multiple/delete').delete(async (req, res) 
         }
 
         if(result)res.status(200).json(resultDone);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+
+//GET BY DB VERSION FILTERED X
+ProductShadeCodesRoute.route(path + '/by-db-version-x/:db_version_id').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+        const keywords = req.query.keyw || '';
+        const group = req.query.group || '';
+        const product = req.query.prod || '';
+        const sub_product = req.query.subp || '';
+        const base = req.query.base || '';
+        
+        const searchFilters: SearchFilters = {
+            keywords: keywords as string,
+            product_group_id: group as string,
+            product_id: product as string,
+            sub_product_id: sub_product as string,
+            product_base_id: base as string
+        }
+
+        const limit = req.query.limit || null;
+        const offset = req.query.offset || null;
+
+        const paginationConfig: PaginationConfig = {
+            limit: Number(limit),
+            offset: Number(offset)
+        }
+
+        const table = new ProductShadeCodesSchema();
+        const result  = await table.getByDBVersionFilteredX(db_version_id, searchFilters, paginationConfig);
+
+        if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
         res.status(400).send(error);
