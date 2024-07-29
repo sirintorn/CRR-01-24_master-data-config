@@ -41,6 +41,7 @@ ProductCanSizesRoute.route(path).post(async (req, res) => {
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
+        if(error.status && error.status == 409) res.status(409).send();
         res.status(400).send(error);
     }
 });
@@ -55,6 +56,7 @@ ProductCanSizesRoute.route(path + '/:id').put(async (req, res) => {
         if(result)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
+        if(error.status && error.status == 409) res.status(409).send();
         res.status(400).send(error);
     }
 });
