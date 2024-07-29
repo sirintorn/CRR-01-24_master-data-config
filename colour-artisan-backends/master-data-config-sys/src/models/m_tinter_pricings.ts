@@ -30,11 +30,37 @@ export class TinterPricingsSchema extends TableRecordsSchema {
     }
 
     create(data: TinterPricing): Promise<any[]> {
-        return super.create(data, true);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const table = DB<any>(this.tableName);
+                const vals = await table.select('*').where('db_version_id', data.db_version_id).where('tinter_code', data.tinter_code).where('deleted_at', null);
+                if(vals.length > 0){
+                    reject({status: 409});
+                }else{
+                    const result = await super.create(data, true);  
+                    resolve(result);  
+                }
+            } catch (error: any) {
+                reject({status: 400});
+            }
+        });
     }
 
     update(id: any, data: TinterPricing): Promise<any> {
-        return super.update(id, data);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const table = DB<any>(this.tableName);
+                const vals = await table.select('*').where('db_version_id', data.db_version_id).where('tinter_code', data.tinter_code).where('deleted_at', null);
+                if(vals.length > 0){
+                    reject({status: 409});
+                }else{
+                    const result = await super.update(id, data);  
+                    resolve(result);  
+                }
+            } catch (error: any) {
+                reject({status: 400});
+            }
+        });
     }
 
     delete(id: any): Promise<any> {
