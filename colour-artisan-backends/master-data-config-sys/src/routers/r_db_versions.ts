@@ -71,6 +71,8 @@
  */
 import { Router } from "express";
 import { DBVersion, DBVersionsSchema } from "../models/m_db_versions";
+import { DBConfigsSchema } from "../models/m_db_configs";
+import { CONFIGS_COPY } from "../configs/db_config_structure";
 
 export const DBVersionsRoute = Router();
 
@@ -106,8 +108,19 @@ DBVersionsRoute.route(path).post(async (req, res) => {
     try {
         const data = req.body;
         const table = new DBVersionsSchema();
-        const result: any = await table.create(data);
-        if(result)res.status(200).json(result);   
+        const result1: any = await table.create(data);
+
+        const id = result1[0].id;
+        const dbConfigSchema = await new DBConfigsSchema();
+        const result2: any = await dbConfigSchema.create(dbConfigSchema.generateDefaultConfig(id));
+
+        const result = {
+            db_version: result1,
+            db_configs: result2
+        }
+
+
+        if(result1)res.status(200).json(result);   
         else res.status(404).send();
     } catch (error: any) {
         res.status(400).send(error);

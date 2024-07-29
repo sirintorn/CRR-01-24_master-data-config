@@ -43,7 +43,7 @@ export class DBVersionsSchema extends TableRecordsSchema{
         return super.get(id);
     }
 
-    async create(data: DBVersion): Promise<any[]>{
+    create(data: DBVersion): Promise<any[]>{
         return super.create(data, true);
     }
 

@@ -80,4 +80,34 @@ CanSizesRoute.route(path + '/:id').patch(async (req, res) => {
     } catch (error: any) {
         res.status(400).send(error);
     }
-})
+});
+
+///DELETE MULTIPLE
+CanSizesRoute.route(path + '/multiple/delete').delete(async (req, res) => {
+    try {
+        const ids = req.body as any[];
+        const table = new CanSizesSchema();
+        const result: any = await table.deleteMultiple(ids);
+
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+///BUSINESS LOGICS
+//GET BY DB VERSION
+CanSizesRoute.route(path + '/by-db-version/:db_version_id').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+        
+        const table = new CanSizesSchema();
+        const result: Array<any> = await table.getByDBVersion(db_version_id);
+
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});

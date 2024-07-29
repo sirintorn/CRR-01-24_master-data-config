@@ -22,15 +22,45 @@ export class CanSizesSchema extends TableRecordsSchema{
     }
 
     create(data: CanSize): Promise<any[]>{
-        return super.create(data, true);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const table = DB<any>(this.tableName);
+                const vals = await table.select('*').where('db_version_id', data.db_version_id).where('can_unit_id', data.can_unit_id).where('display_name', data.display_name).where('deleted_at', null);
+                if(vals.length > 0){
+                    reject({status: 409});
+                }else{
+                    const result = await super.create(data, true);  
+                    resolve(result);  
+                }
+            } catch (error: any) {
+                reject({status: 400, error: error});
+            }
+        });
     }
 
     update(id: any, data: CanSize): Promise<any>{
-        return super.update(id, data);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const table = DB<any>(this.tableName);
+                const vals = await table.select('*').where('db_version_id', data.db_version_id).where('can_unit_id', data.can_unit_id).where('display_name', data.display_name).where('deleted_at', null);
+                if(vals.length > 0){
+                    reject({status: 409});
+                }else{
+                    const result = await super.update(id, data);  
+                    resolve(result);  
+                }
+            } catch (error: any) {
+                reject({status: 400});
+            }
+        });
     }
 
     delete(id: any): Promise<any> {
         return super.delete(id);
+    }
+
+    deleteMultiple(ids: any[]): Promise<any> {
+        return super.deleteMultiple(ids);
     }
 
     //BUSINESS LOGICS

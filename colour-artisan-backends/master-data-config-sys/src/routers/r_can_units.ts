@@ -99,3 +99,19 @@ CanUnitsRoute.route(path).delete(async (req, res) => {
         res.status(400).send(error);
     }
 });
+
+
+//BUSINESS LOGICS
+CanUnitsRoute.route(path + '/by-db-version/:db_version_id').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+
+        const table = new CanUnitsSchema();
+        const result: Array<CanUnit> = await table.getByDBVersion(db_version_id);
+
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
