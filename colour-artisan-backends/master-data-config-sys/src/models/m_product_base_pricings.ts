@@ -87,6 +87,17 @@ export class ProductBasePricingsSchema extends TableRecordsSchema {
             });
         });
     }
+
+    deleteByProductBase(product_base_id: any){
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.where('product_base_id', product_base_id).update({'deleted_at': DB.fn.now()}).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }
 
 
