@@ -36,6 +36,18 @@ export class GeneralPricingsSchema extends TableRecordsSchema {
         return super.delete(id);
     }
 
+    generateRecord(db_version_id: any, can_size_id: any): GeneralPricing{
+        return {
+            db_version_id: db_version_id,
+            can_size_id: can_size_id,
+            price: 0,
+            mark_up_price_01: 0,
+            mark_up_price_02: 0,
+            mark_up_price_03: 0,
+            default_mark_up_price: 0,
+        } as GeneralPricing;
+    }
+
     ////BUSINESS LOGICS
     getByDBVersion(db_version_id: any): Promise<GeneralPricing[]> {
         return new Promise((resolve, reject) => {
