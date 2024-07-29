@@ -128,6 +128,8 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
             if(paginationConfig.limit){
                 table.limit(paginationConfig.limit, { skipBinding: true })
             }
+
+            
             
             table.orderBy('updated_at', 'desc');
             table.then((val) => {

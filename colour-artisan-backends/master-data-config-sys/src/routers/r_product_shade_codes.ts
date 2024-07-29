@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { PaginationConfig, ProductShadeCode, ProductShadeCodesSchema, SearchFilters } from "../models/m_product_shade_codes";
 import { ProductTintersSchema } from "../models/m_product_tinters";
+import { ProductGroupsSchema } from "../models/m_product_groups";
+import { ProductsSchema } from "../models/m_products";
+import { ProductBasesSchema } from "../models/m_product_bases";
+import { SubProductsSchema } from "../models/m_sub_products";
+import { CanSizesSchema } from "../models/m_can_sizes";
 
 
 export const ProductShadeCodesRoute = Router();
@@ -115,8 +120,35 @@ ProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id').get(async (
         }
 
         const table = new ProductShadeCodesSchema();
-        const items: ProductShadeCode[]  = await table.getByDBVersionFiltered(db_version_id, searchFilters, paginationConfig);
+        const items: any[]  = await table.getByDBVersionFiltered(db_version_id, searchFilters, paginationConfig);
         const count = await table.getByDBVersionFilteredCount(db_version_id, searchFilters);
+
+        for (let i = 0; i < items.length; i++) {
+            const record = items[i];
+
+            const pgS = new ProductGroupsSchema();
+            const pg = await pgS.get(record.product_group_id);
+
+            const pS = new ProductsSchema();
+            const p = await pS.get(record.product_id);
+
+            const pbS = new ProductBasesSchema();
+            const pb = await pbS.get(record.product_base_id);
+
+            const spS = new SubProductsSchema();
+            const sp = await spS.get(record.sub_product_id);
+            
+            const csS = new CanSizesSchema();
+            const cs = await csS.get(record.can_size_id);
+
+            record['_data'] = {
+                product_group: pg,
+                product: p,
+                product_base: pb,
+                sub_product: sp,
+                can_size: cs
+            };
+        }
 
         const result = {
             items: items,
