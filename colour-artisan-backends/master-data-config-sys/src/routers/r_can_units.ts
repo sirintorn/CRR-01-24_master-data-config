@@ -57,7 +57,7 @@ CanUnitsRoute.route(path + '/:id').put(async (req, res) => {
         else res.status(404).send();
     } catch (error: any) {
         if(error.status && error.status == 409) res.status(409).send();
-        res.status(400).send(error);
+        else res.status(400).send(error);
     }
 });
 
