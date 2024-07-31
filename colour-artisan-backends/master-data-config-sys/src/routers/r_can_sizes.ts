@@ -3,6 +3,7 @@ import { CanSize, CanSizesSchema } from "../models/m_can_sizes";
 import { GeneralPricingsSchema } from "../models/m_general_pricings";
 import { ProductBasePricingsSchema } from "../models/m_product_base_pricings";
 import { ProductBasesSchema } from "../models/m_product_bases";
+import { CanUnitsSchema } from "../models/m_can_units";
 
 export const CanSizesRoute = Router();
 
@@ -51,13 +52,13 @@ CanSizesRoute.route(path).post(async (req, res) => {
         const productBases = await pbS.getByDBVersion(db_version_id);
 
         const pbpS = new ProductBasePricingsSchema();
-        const records = [] as any[];
+        let records = [] as any[];
 
         for (let i = 0; i < productBases.length; i++) {
             const item = productBases[i];
             records.push(pbpS.generateRecord(db_version_id, item.id, can_size_id));
         }
-        const result3 = pbpS.createMultiple(records);
+        const result3 = await pbpS.createMultiple(records, true);
 
         const result = {
             can_size: result1,
@@ -137,6 +138,20 @@ CanSizesRoute.route(path + '/by-db-version/:db_version_id').get(async (req, res)
 
         const table = new CanSizesSchema();
         const result: Array<any> = await table.getByDBVersion(db_version_id);
+
+        const canUnitsSchema = new CanUnitsSchema();
+        const canUnits = await canUnitsSchema.getByDBVersion(db_version_id);
+        for (let i = 0; i < result.length; i++) {
+            const record = result[i];
+            
+            const cu = canUnits.find((value) => {
+                if(value.id == record.can_unit_id) return value;
+            });
+
+            record["_data"] = {
+                can_unit: cu
+            };
+        }
 
         if (result) res.status(200).json(result);
         else res.status(404).send();

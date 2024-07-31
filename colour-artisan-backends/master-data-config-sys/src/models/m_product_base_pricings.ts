@@ -30,7 +30,7 @@ export class ProductBasePricingsSchema extends TableRecordsSchema {
     }
 
     createMultiple(datas: any[], isNewId?: boolean): Promise<any> {
-        return super.create(datas, true);
+        return super.createMultiple(datas, isNewId);
     }
 
     update(id: any, data: ProductBasePricing): Promise<any> {
