@@ -13,6 +13,7 @@ export interface DBConfig {
     tinter_price_markup_price_mode: any,
     tinter_price_visible: boolean,
     base_price_lookup_mode: any,
+    general_price_markup_price: number,
     base_price_markup_price: number,
     base_price_markup_price_mode: any,
     base_price_visible: boolean,
@@ -62,6 +63,7 @@ export const CONFIGS_COPY = {
             markup2: 'markup2',
             markup3: 'markup3'
         },
+        generalPriceMarkupPrice: 0,
         basePriceMarkupPrice: 0,
         basePriceVisible: true,
         displayUnits: {

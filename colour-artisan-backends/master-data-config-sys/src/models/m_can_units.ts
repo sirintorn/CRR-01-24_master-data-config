@@ -54,7 +54,8 @@ export class CanUnitsSchema extends TableRecordsSchema {
             try {
                 const table = DB<any>(this.tableName);
                 const vals = await table.select('*').where('db_version_id', data.db_version_id).where('name', data.name).where('deleted_at', null);
-                if(vals.length > 0){
+                const old = await this.get(id);
+                if(vals.length > 0 && old.name != data.name){
                     reject({status: 409});
                 }else{
                     const result = await super.update(id, data);  

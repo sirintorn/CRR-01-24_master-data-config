@@ -43,7 +43,8 @@ export class CanSizesSchema extends TableRecordsSchema{
             try {
                 const table = DB<any>(this.tableName);
                 const vals = await table.select('*').where('db_version_id', data.db_version_id).where('can_unit_id', data.can_unit_id).where('display_name', data.display_name).where('deleted_at', null);
-                if(vals.length > 0){
+                const old = await this.get(id);
+                if(vals.length > 0 && old.can_unit_id != data.can_unit_id && old.display_name){
                     reject({status: 409});
                 }else{
                     const result = await super.update(id, data);  

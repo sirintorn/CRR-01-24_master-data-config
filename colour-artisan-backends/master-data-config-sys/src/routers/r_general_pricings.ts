@@ -96,10 +96,11 @@ GeneralPricingRoute.route(path + '/by-db-version/:db_version_id').get(async (req
         const items: Array<any> = await table.getByDBVersion(db_version_id);
 
         const canSizesSchema = new CanSizesSchema();
+        const canSizes = await canSizesSchema.getByDBVersion(db_version_id);
 
         for (let i = 0; i < items.length; i++) {
-            const record = items[i];
-            const canSize = await canSizesSchema.get(record.can_size_id);
+            let record = items[i];
+            const canSize = canSizes.find((value) => { if(value.id == record.can_size_id) return value; })
             record['_data'] = {
                 can_size: canSize
             }

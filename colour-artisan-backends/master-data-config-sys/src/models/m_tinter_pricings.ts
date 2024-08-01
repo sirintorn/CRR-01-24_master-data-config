@@ -51,7 +51,8 @@ export class TinterPricingsSchema extends TableRecordsSchema {
             try {
                 const table = DB<any>(this.tableName);
                 const vals = await table.select('*').where('db_version_id', data.db_version_id).where('tinter_code', data.tinter_code).where('deleted_at', null);
-                if(vals.length > 0){
+                const old = await this.get(id);
+                if(vals.length > 0 && old.tinter_code != data.tinter_code){
                     reject({status: 409});
                 }else{
                     const result = await super.update(id, data);  

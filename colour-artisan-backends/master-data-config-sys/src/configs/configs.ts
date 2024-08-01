@@ -62,6 +62,7 @@ export const CONFIGS = {
             markup2: 'markup2',
             markup3: 'markup3'
         },
+        generalPriceMarkupPrice: 0,
         basePriceMarkupPrice: 0,
         basePriceVisible: true,
         displayUnits: {

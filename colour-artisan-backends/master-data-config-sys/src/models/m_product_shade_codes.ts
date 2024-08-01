@@ -64,7 +64,8 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
             try {
                 const table = DB<any>(this.tableName);
                 const vals = await table.select('*').where('db_version_id', data.db_version_id).where('shade_code', data.shade_code).orWhere('shade_name', data.shade_name).where('deleted_at', null);
-                if(vals.length > 0){
+                const old = await this.get(id);
+                if(vals.length > 0 && old.shade_code != data.shade_code && old.shade_name != old.shade_name){
                     reject({status: 409});
                 }else{
                     const result = await super.update(id, data);  
