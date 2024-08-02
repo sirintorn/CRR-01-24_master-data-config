@@ -44,6 +44,18 @@ export class ProductTintersSchema extends TableRecordsSchema{
         return super.createMultiple(datas, true);
     }
 
+    ///GET BY PRODUCT SHADE CODE
+    getByProductShadeCode(product_shade_code_id: any): Promise<ProductTinter[]>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*').where('product_shade_code_id', product_shade_code_id).where('deleted_at', null).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        })
+    }
+
 
     ///DELETE MULTPLES
     deleteMultiple(ids: any[]): Promise<any> {

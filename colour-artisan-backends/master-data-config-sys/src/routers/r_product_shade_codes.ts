@@ -226,6 +226,8 @@ ProductShadeCodesRoute.route(path + '/by-db-version-x/:db_version_id').get(async
             product_base_id: base as string
         }
 
+        console.log(searchFilters)
+
         const limit = req.query.limit || null;
         const offset = req.query.offset || null;
 

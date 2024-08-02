@@ -46,14 +46,14 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
             try {
                 const table = DB<any>(this.tableName);
                 const vals = await table.select('*').where('db_version_id', data.db_version_id).where('shade_code', data.shade_code).orWhere('shade_name', data.shade_name).where('deleted_at', null);
-                if(vals.length > 0){
-                    reject({status: 409});
-                }else{
-                    const result = await super.create(data, true);  
-                    resolve(result);  
+                if (vals.length > 0) {
+                    reject({ status: 409 });
+                } else {
+                    const result = await super.create(data, true);
+                    resolve(result);
                 }
             } catch (error: any) {
-                reject({status: 400, error: error});
+                reject({ status: 400, error: error });
             }
         });
         //return super.create(data, true);
@@ -65,14 +65,14 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
                 const table = DB<any>(this.tableName);
                 const vals = await table.select('*').where('db_version_id', data.db_version_id).where('shade_code', data.shade_code).orWhere('shade_name', data.shade_name).where('deleted_at', null);
                 const old = await this.get(id);
-                if(vals.length > 0 && old.shade_code != data.shade_code && old.shade_name != old.shade_name){
-                    reject({status: 409});
-                }else{
-                    const result = await super.update(id, data);  
-                    resolve(result);  
+                if (vals.length > 0 && old.shade_code != data.shade_code && old.shade_name != old.shade_name) {
+                    reject({ status: 409 });
+                } else {
+                    const result = await super.update(id, data);
+                    resolve(result);
                 }
             } catch (error: any) {
-                reject({status: 400});
+                reject({ status: 400 });
             }
         });
         //return super.update(id, data);
@@ -95,50 +95,6 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
         });
     }
 
-    getByDBVersionFiltered(db_version_id: any, searchFilters: SearchFilters, paginationConfig: PaginationConfig): Promise<ProductShadeCode[]> {
-        return new Promise((resolve, reject) => {
-            const table = DB<any>(this.tableName);
-            table.select('*');
-            table.where('db_version_id', db_version_id);
-            table.where('deleted_at', null);
-
-            //Query Builder on Search Filters
-            if(searchFilters.keywords != ''){
-                table
-                .whereILike('shade_code', `%${searchFilters.keywords}%`)
-                .orWhereILike('shade_name', `%${searchFilters.keywords}%`);
-            }
-            if(searchFilters.product_group_id != ''){
-                table.where('product_group_id', searchFilters.product_group_id);
-            }
-            if(searchFilters.product_id != ''){
-                table.where('product_id', searchFilters.product_id);
-            }
-            if(searchFilters.sub_product_id != ''){
-                table.where('sub_product_id', searchFilters.sub_product_id)
-            }
-            if(searchFilters.product_base_id != ''){
-                table.where('product_base_id', searchFilters.product_base_id);
-            }
-            
-
-            //Query Builder on PaginationConfig
-            if(paginationConfig.offset){
-                table.offset(paginationConfig.offset, { skipBinding: true })
-            }
-            if(paginationConfig.limit){
-                table.limit(paginationConfig.limit, { skipBinding: true })
-            }
-            
-            table.orderBy('updated_at', 'desc');
-            table.then((val) => {
-                resolve(val);
-            }).catch(error => {
-                reject(error);
-            });
-        })
-    }
-
     getByDBVersionFilteredX(db_version_id: any, searchFilters: SearchFilters, paginationConfig: PaginationConfig): Promise<any> {
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
@@ -147,43 +103,79 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
             table.where('deleted_at', null);
 
             //Query Builder on Search Filters
-            if(searchFilters.keywords != ''){
+            if (searchFilters.keywords != '') {
                 table
-                .whereILike('shade_code', `%${searchFilters.keywords}%`)
-                .orWhereILike('shade_name', `%${searchFilters.keywords}%`);
+                    .where('shade_code', `%${searchFilters.keywords}%`)
+                    .where('shade_name', `%${searchFilters.keywords}%`);
             }
-            if(searchFilters.product_group_id != ''){
+            if (searchFilters.product_group_id != '') {
                 table.where('product_group_id', searchFilters.product_group_id);
             }
-            if(searchFilters.product_id != ''){
+            if (searchFilters.product_id != '') {
                 table.where('product_id', searchFilters.product_id);
             }
-            if(searchFilters.sub_product_id != ''){
+            if (searchFilters.sub_product_id != '') {
                 table.where('sub_product_id', searchFilters.sub_product_id)
             }
-            if(searchFilters.product_base_id != ''){
+            if (searchFilters.product_base_id != '') {
                 table.where('product_base_id', searchFilters.product_base_id);
             }
-            
+
 
             //Query Builder on PaginationConfig
-            if(paginationConfig.offset){
+            if (paginationConfig.offset) {
                 table.offset(paginationConfig.offset, { skipBinding: true })
             }
-            if(paginationConfig.limit){
+            if (paginationConfig.limit) {
                 table.limit(paginationConfig.limit, { skipBinding: true })
             }
 
-            table.with(
-                "prodG", 
-                (db) => {
-                    db.select("*").from(TABLE_NAMES.ProductGroups).where("id", `${this.tableName}.product_group_id`);
-                }
-            );
-            
-            
             table.orderBy('updated_at', 'desc');
-            resolve(table.toQuery());
+            resolve(table.toQuery())
+        })
+    }
+
+    getByDBVersionFiltered(db_version_id: any, searchFilters: SearchFilters, paginationConfig: PaginationConfig): Promise<ProductShadeCode[]> {
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*');
+            table.where('db_version_id', db_version_id);
+            table.where('deleted_at', null);
+
+            //Query Builder on Search Filters
+            if (searchFilters.keywords != '') {
+                table
+                    .whereILike('shade_code', `%${searchFilters.keywords}%`)
+                    .whereILike('shade_name', `%${searchFilters.keywords}%`);
+            }
+            if (searchFilters.product_group_id != '') {
+                table.where('product_group_id', searchFilters.product_group_id);
+            }
+            if (searchFilters.product_id != '') {
+                table.where('product_id', searchFilters.product_id);
+            }
+            if (searchFilters.sub_product_id != '') {
+                table.where('sub_product_id', searchFilters.sub_product_id)
+            }
+            if (searchFilters.product_base_id != '') {
+                table.where('product_base_id', searchFilters.product_base_id);
+            }
+
+
+            //Query Builder on PaginationConfig
+            if (paginationConfig.offset) {
+                table.offset(paginationConfig.offset, { skipBinding: true })
+            }
+            if (paginationConfig.limit) {
+                table.limit(paginationConfig.limit, { skipBinding: true })
+            }
+
+            table.orderBy('updated_at', 'desc');
+            table.then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
         })
     }
 
@@ -195,24 +187,24 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
             table.where('deleted_at', null);
 
             //Query Builder on Search Filters
-            if(searchFilters.keywords != ''){
+            if (searchFilters.keywords != '') {
                 table
                 .whereILike('shade_code', `%${searchFilters.keywords}%`)
-                .orWhereILike('shade_name', `%${searchFilters.keywords}%`);
+                .whereILike('shade_name', `%${searchFilters.keywords}%`);
             }
-            if(searchFilters.product_group_id != ''){
+            if (searchFilters.product_group_id != '') {
                 table.where('product_group_id', searchFilters.product_group_id);
             }
-            if(searchFilters.product_id != ''){
+            if (searchFilters.product_id != '') {
                 table.where('product_id', searchFilters.product_id);
             }
-            if(searchFilters.sub_product_id != ''){
+            if (searchFilters.sub_product_id != '') {
                 table.where('sub_product_id', searchFilters.sub_product_id)
             }
-            if(searchFilters.product_base_id != ''){
+            if (searchFilters.product_base_id != '') {
                 table.where('product_base_id', searchFilters.product_base_id);
             }
-            
+
             table.then((val) => {
                 resolve(val);
             }).catch(error => {

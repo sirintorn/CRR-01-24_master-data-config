@@ -87,6 +87,18 @@ ProductTintersRoute.route(path + '/:id').patch(async (req, res) => {
 
 
 ///BUSINESS LOGICS
+///GET BY PRODUCT SHADE CODE
+ProductTintersRoute.route(path + '/by-product-shade-code/:product_shade_code_id').get(async (req, res) => {
+    try {
+        const product_shade_code_id = req.params.product_shade_code_id
+        const table = new ProductTintersSchema()
+        const result = await table.getByProductShadeCode(product_shade_code_id)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
 ///CREATE MULTIPLE
 ProductTintersRoute.route(path + '/multiple/create').post(async (req, res) => {
     try {
@@ -96,7 +108,7 @@ ProductTintersRoute.route(path + '/multiple/create').post(async (req, res) => {
         if (result) res.status(200).json(result);
         else res.status(404).send();
     } catch (error: any) {
-        if (error.response.status == 409) res.status(409).send();
+        if (error.status && error.status == 409) res.status(409).send();
         res.status(400).send(error);
     }
 });
@@ -141,7 +153,7 @@ ProductTintersRoute.route(path + '/multiple/smart').put(async (req, res) => {
         res.status(200).json(result);
 
     } catch (error: any) {
-        if (error.response.status == 409) res.status(409).send();
+        if (error.status && error.status == 409) res.status(409).send();
         res.status(400).send(error);
     }
 });
