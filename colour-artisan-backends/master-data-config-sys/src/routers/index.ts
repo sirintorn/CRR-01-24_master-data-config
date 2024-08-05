@@ -32,6 +32,7 @@ import { XTempTest } from "./x_temp_test";
 import { DBConfigsRoute } from "./r_db_configs";
 import { XProductGroupRoute } from "./x_product_group";
 import { XProductRoute } from "./x_product";
+import { AppRoute } from "./r_app";
 
 export const routes = Router();
 
@@ -69,5 +70,8 @@ routes.use(DBConfigsRoute);
 routes.use(XProductGroupRoute);
 //17
 routes.use(XProductRoute);
+
+//18
+routes.use(AppRoute);
 
 routes.use(XTempTest);

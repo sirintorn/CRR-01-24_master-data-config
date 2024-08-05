@@ -39,6 +39,17 @@ export class ProductTintersSchema extends TableRecordsSchema{
 
 
     ///BUSINESS LOGICS
+    getByDBVersion(db_version_id: any): Promise<ProductTinter[]> {
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*').where('db_version_id', db_version_id).where('deleted_at', null).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
     ///CREATE MULTIPLE
     createMultiple(datas: any[]): Promise<any[]>{
         return super.createMultiple(datas, true);

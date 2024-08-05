@@ -78,6 +78,17 @@ export class SubProductsSchema extends TableRecordsSchema {
             });*/
         });
     }
+
+    getByDBVersionLite(db_version_id: any): Promise<SubProduct[]> {
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*').where('db_version_id', db_version_id).where('deleted_at', null).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }
 
 
