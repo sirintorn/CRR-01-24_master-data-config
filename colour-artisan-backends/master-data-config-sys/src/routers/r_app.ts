@@ -30,7 +30,7 @@ AppRoute.route(path + appPaths.online).post(async (req, res) => {
         const result = {
             status: 'online',
             at: (new Date()).toLocaleTimeString(),
-            address: req.socket.remoteAddress,
+            address: req.ip,
             using: body,
             up_to_date: true,
             changes: []

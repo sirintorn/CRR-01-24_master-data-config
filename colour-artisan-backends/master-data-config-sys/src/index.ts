@@ -33,6 +33,9 @@ app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({}));
 app.use(express.json()); // parses incoming requests with JSON payloads
 app.use(express.urlencoded({ extended: true })); // parses incoming requests with urlencoded payloads
 
+//ALLOW GETTING CLIENT'S IP ADDRESS
+app.set('trust proxy', true);
+
 dotenv.config(); //config to read .env file
 const NAME = process.env.NAME as string;
 const PORT = process.env.PORT;
