@@ -19,10 +19,10 @@ export const AppRoute = Router();
 const path = '/app';
 const appPaths = {
     db: '/db',
-    online: '/online'
+    online: '/sync'
 };
 
-//STAY ONLINE
+//SYNC
 AppRoute.route(path + appPaths.online).post(async (req, res) => {
     try {
         const body = req.body;
@@ -31,14 +31,16 @@ AppRoute.route(path + appPaths.online).post(async (req, res) => {
             status: 'online',
             at: (new Date()).toLocaleTimeString(),
             address: req.socket.remoteAddress,
-            using: body
+            using: body,
+            up_to_date: true,
+            changes: []
         }
 
         res.status(200).send(result);
     } catch (error) {
         res.status(400).send(error);
     }
-})
+});
 
 //GET DB Version & Config, also ALL Related Data except ProductShadeCodes
 AppRoute.route(path + appPaths.db + '/:db_version_id').get(async (req, res) => {
