@@ -29,11 +29,16 @@ export class DispenseHistorySchema extends TableRecordsSchema{
     }
 
     getByMachine(machine_id: any): Promise<DispenseHistory[]>{
+        const now = new Date();
+        const today = now.toLocaleDateString();
+
         return new Promise((resolve, reject) => {
             const table = DB<DispenseHistory>(this.tableName);
             table.select('*')
             .where('machine_id', machine_id)
             .where('deleted_at', null)
+            .where('updated_at', '>=', today)
+            .where('updated_at', '<', now)
             .then((val) => {
                 resolve(val);
             }).catch(error => {
