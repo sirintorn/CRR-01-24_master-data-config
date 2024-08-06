@@ -33,6 +33,8 @@ import { DBConfigsRoute } from "./r_db_configs";
 import { XProductGroupRoute } from "./x_product_group";
 import { XProductRoute } from "./x_product";
 import { AppRoute } from "./r_app";
+import { XImportExport } from "./x_import_export";
+import { ZDispenseHistory } from "./z_dispense_history";
 
 export const routes = Router();
 
@@ -74,4 +76,13 @@ routes.use(XProductRoute);
 //18
 routes.use(AppRoute);
 
+//19
+routes.use(XImportExport);
+
+
+//special
 routes.use(XTempTest);
+
+
+//SHOULD BE ANOTHER MICRO SERVICE
+routes.use(ZDispenseHistory);

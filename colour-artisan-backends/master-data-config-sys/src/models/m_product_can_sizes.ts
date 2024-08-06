@@ -90,6 +90,20 @@ export class ProductCanSizesSchema extends TableRecordsSchema {
             });
         });
     }
+
+    getByProduct(product_id: any): Promise<any[]> {
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select(`*`)
+            .where(`product_id`, product_id)
+            .where(`deleted_at`, null)
+            .then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }
 
 

@@ -140,3 +140,41 @@ ProductCanSizesRoute.route(path + '/by-db-version/:db_version_id').get(async (re
     }
 });
 
+//GET BY PRODUCT
+ProductCanSizesRoute.route(path + '/by-product/:product_id').get(async (req, res) => {
+    try {
+        const product_id = req.params.product_id;
+        
+        const table = new ProductCanSizesSchema();
+        const items: Array<any> = await table.getByProduct(product_id);
+
+        const productsSchema = new ProductsSchema();
+        const products = await productsSchema.getByDBVersionLite(product_id);
+
+        const canSizesSchema = new CanSizesSchema();
+        const canSizes = await canSizesSchema.getByDBVersion(product_id);
+
+        for (let i = 0; i < items.length; i++) {
+            const record = items[i];
+            
+            const p = products.find((value) => {
+                if(value.id == record.product_id) return value;
+            });
+
+            const c = canSizes.find((value) => {
+                if(value.id == record.can_size_id) return value;
+            });
+
+            record['_data'] = {
+                product: p,
+                can_size: c
+            }   
+        }
+
+        if(items)res.status(200).json(items);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+

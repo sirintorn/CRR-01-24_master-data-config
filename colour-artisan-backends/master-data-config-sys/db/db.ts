@@ -22,6 +22,8 @@ export const TABLE_NAMES = {
     GeneralPricings: 'GeneralPricings',
     ProductBasePricings: 'ProductBasePricings',
     TinterPricings: 'TinterPricings',
+    DispenseHistory: 'DispenseHistory',
+    DispenseHistoryTinters: 'DispenseHistoryTinters'
 }
 
 export interface TableRecord{

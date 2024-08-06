@@ -19,7 +19,8 @@ export const AppRoute = Router();
 const path = '/app';
 const appPaths = {
     db: '/db',
-    online: '/sync'
+    online: '/sync',
+    bill: 'bill'
 };
 
 //SYNC
@@ -141,3 +142,6 @@ AppRoute.route(path + appPaths.db + '/redeem').get(async (req, res) => {
         res.status(400).send(error);
     }
 });
+
+
+//CALCULATE BILL
