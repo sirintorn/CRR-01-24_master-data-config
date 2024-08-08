@@ -22,8 +22,16 @@ export const TABLE_NAMES = {
     GeneralPricings: 'GeneralPricings',
     ProductBasePricings: 'ProductBasePricings',
     TinterPricings: 'TinterPricings',
+    //NOT REALLY PART OF THE SAME SERVICES
+    CircuitInfo: 'CircuitInfo',
+    CalibrationInfo: 'CalibrationInfo',
+    VolumeCalibrationTarget: 'VolumeCalibrationTarget',
+    StepCalibrationTarget: 'StepCalibrationTarget',
+    AccuracyTestTarget: 'AccuracyTestTarget',
+    //NOT REALLY PART OF THE SAME SERVICES
     DispenseHistory: 'DispenseHistory',
-    DispenseHistoryTinters: 'DispenseHistoryTinters'
+    DispenseHistoryTinters: 'DispenseHistoryTinters',
+    //NOT REALLY PART OF THE SAME SERVICES
 }
 
 export interface TableRecord{

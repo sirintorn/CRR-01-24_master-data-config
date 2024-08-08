@@ -187,7 +187,7 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
 
             setTimeout(async () => {
                 await fs.unlinkSync(req.file?.path || '');
-            }, (3 * 60 * 1000)); //file will be deleted after 3 minutes
+            }, (1 * 60 * 1000)); //file will be deleted after 1 minutes
         });
     } catch (error: any) {
         res.status(400).send(error);
@@ -266,10 +266,10 @@ XImportExport.route(path + '/:db_version_id' + '/export').get(async (req, res) =
         await workbook.xlsx.writeFile(filePath);
         res.status(200).download(filePath);
 
-        //file will be deleted after 3 minutes
+        //file will be deleted after 1 minutes
         setTimeout(async () => {
             await fs.unlinkSync(filePath);
-        }, (3 * 60 * 1000));
+        }, (1 * 60 * 1000));
     } catch (error: any) {
         res.status(400).send(error);
     }
