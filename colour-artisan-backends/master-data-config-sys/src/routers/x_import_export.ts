@@ -110,7 +110,7 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
 
                 //#4
                 //prod-shades and prod-tinters
-                const products: any = await DBImporter.computeSheet_1(
+                const shadeResults: any = await DBImporter.computeSheet_1(
                     workbook, 
                     db_version_id,
                     can_sizes,
@@ -122,33 +122,55 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                     prodTinterSCH
                 );
 
+                const product_groups = shadeResults.product_groups;
+                const products = shadeResults.products;
+                const product_bases = shadeResults.product_bases;
+                const sub_products = shadeResults.sub_products;
+                const shades = shadeResults.shades;
                 //#5
                 //prod-can-sizes
-                const product_can_sizes = await DBImporter.computeSheet_5(workbook, db_version_id, products, can_sizes);
+                const product_can_sizes = await DBImporter.computeSheet_5(
+                    workbook, 
+                    db_version_id, 
+                    products, 
+                    can_sizes
+                );
 
                 //#6
                 //prod-base-pricings
-                const product_base_pricings = await DBImporter.computeSheet_6(workbook, db_version_id);
+                const product_base_pricings = await DBImporter.computeSheet_6(
+                    workbook, 
+                    db_version_id,
+                    product_bases,
+                    can_sizes
+                );
 
                 //#7
                 //gen-pricings
-                const general_pricings = await DBImporter.computeSheet_7(workbook, db_version_id);
+                const general_pricings = await DBImporter.computeSheet_7(
+                    workbook, 
+                    db_version_id,
+                    can_sizes
+                );
 
                 //NON
                 //db-version
                 const db_version = await DBImporter.computeSheet_8(workbook);
+
+                await DBImporter.batchUpFromShades(shadesSCH, prodTinterSCH, shades);
 
                 const result = {
                     db: db_version_id,
                     can_units: can_units,
                     can_sizes: can_sizes,
                     tinter_pricings: tinter_pricings,
+                    product_groups: product_groups,
                     products: products,
+                    product_bases: product_bases,
                     product_can_sizes: product_can_sizes,
                     product_base_pricings: product_base_pricings,
                     general_pricings: general_pricings,
                     db_version: db_version
-
                 };
                 res.status(200).json(result);
             }

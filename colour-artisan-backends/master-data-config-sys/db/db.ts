@@ -143,6 +143,34 @@ export class TableRecordsSchema{
             });
         });
     }
+
+    batchInsert(datas: any[], isNewId?: boolean): Promise<any[]>{
+        if(isNewId){
+            datas.forEach((item) => item.id = IDGenerator.newUUID());
+        }
+        return new Promise((resolve, reject) => {
+            const chunkSize = 1000;
+            DB.batchInsert(this.tableName, datas, chunkSize)
+            .returning('id')
+            .then((ids) => {
+                resolve(ids);
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    }
+
+    forceDeleteClearTable(): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            //not an actual delete, just symbolically delete
+            table.delete().then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }
 
 //to generate new migration

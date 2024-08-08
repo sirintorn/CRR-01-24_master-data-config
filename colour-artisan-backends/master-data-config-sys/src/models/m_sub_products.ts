@@ -103,6 +103,19 @@ export class SubProductsSchema extends TableRecordsSchema {
             });
         });
     }
+
+    forceDeleteByDBVersion(db_version_id: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.delete()
+            .where('db_version_id', db_version_id)
+            .then(val => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }
 
 

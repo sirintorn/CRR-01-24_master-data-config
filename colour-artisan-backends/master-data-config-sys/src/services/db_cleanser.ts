@@ -30,17 +30,17 @@ export class DBCleanser{
     ) {
         await dbConfigSCH.update(db_version_id, dbConfigSCH.generateDefaultConfig(db_version_id));
     
-        await canSizesSCH.deleteByDBVersion(db_version_id);
-        await canUnitsSCH.deleteByDBVersion(db_version_id);
-        await generalPSCH.deleteByDBVersion(db_version_id);
-        await productBasePSCH.deleteByDBVersion(db_version_id);
-        await basesSCH.deleteByDBVersion(db_version_id);
-        await prodCanSizesSCH.deleteByDBVersion(db_version_id);
-        await groupsSCH.deleteByDBVersion(db_version_id);
-        await shadesSCH.deleteByDBVersion(db_version_id);
-        await prodTinterSCH.deleteByDBVersion(db_version_id);
-        await productsSCH.deleteByDBVersion(db_version_id);
-        await subProdSCH.deleteByDBVersion(db_version_id);
-        await tinterPSCH.deleteByDBVersion(db_version_id);
+        await canSizesSCH.forceDeleteByDBVersion(db_version_id);
+        await canUnitsSCH.forceDeleteByDBVersion(db_version_id);
+        await generalPSCH.forceDeleteByDBVersion(db_version_id);
+        await productBasePSCH.forceDeleteByDBVersion(db_version_id);
+        await basesSCH.forceDeleteByDBVersion(db_version_id);
+        await prodCanSizesSCH.forceDeleteByDBVersion(db_version_id);
+        await groupsSCH.forceDeleteByDBVersion(db_version_id);
+        await shadesSCH.forceDeleteByDBVersion(db_version_id);
+        await prodTinterSCH.forceDeleteByDBVersion(db_version_id);
+        await productsSCH.forceDeleteByDBVersion(db_version_id);
+        await subProdSCH.forceDeleteByDBVersion(db_version_id);
+        await tinterPSCH.forceDeleteByDBVersion(db_version_id);
     }
 }
