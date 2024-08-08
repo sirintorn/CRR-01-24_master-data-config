@@ -7,9 +7,9 @@ import { SubProduct, SubProductsSchema } from "../models/m_sub_products";
 import { TinterPricing, TinterPricingsSchema } from "../models/m_tinter_pricings";
 import { CanUnit, CanUnitsSchema } from "../models/m_can_units";
 import { CanSize, CanSizesSchema } from "../models/m_can_sizes";
-import { ProductCanSize } from "../models/m_product_can_sizes";
-import { ProductBasePricing } from "../models/m_product_base_pricings";
-import { GeneralPricing } from "../models/m_general_pricings";
+import { ProductCanSize, ProductCanSizesSchema } from "../models/m_product_can_sizes";
+import { ProductBasePricing, ProductBasePricingsSchema } from "../models/m_product_base_pricings";
+import { GeneralPricing, GeneralPricingsSchema } from "../models/m_general_pricings";
 import { DBVersion } from "../models/m_db_versions";
 import { ProductShadeCodesSchema } from "../models/m_product_shade_codes";
 
@@ -438,17 +438,32 @@ export class DBImporter {
     static async computeSheet_5(workbook: Workbook,
         db_version_id: any,
         products: Product[],
-        canSizes: any[]
+        canSizes: any[],
+        prodCanSizesSCH: ProductCanSizesSchema,
+        productsSCH: ProductsSchema,
+        groups: ProductGroup[]
     ) {
         const sheet = workbook.getWorksheet('Product_Can_Size');
         //Product	Can_Size_ID		
         let rows: ProductCanSize[] = [];
-        sheet?.eachRow((row, rowNum) => {
+        sheet?.eachRow(async (row, rowNum) => {
             if (rowNum !== 1) {
-                const pid = row.getCell(1).value ? row.getCell(1).value?.toString() : null;
-                const p = products.find((value) => value.name == pid);
+                const pid = row.getCell(1).value ? row.getCell(1).value?.toString()! : '';
+                let p = products.find((value) => value.name == pid);
+                if(!p){
+                    let newp: Product = {
+                        id: null,
+                        db_version_id: db_version_id,
+                        product_group_id: groups[0].id,
+                        name: pid
+                    };
+                    const id = await productsSCH.create(newp);
+                    newp.id = id[0].id;
+                    p = newp;
+                }
                 const csid = row.getCell(2).value ? row.getCell(2).value?.toString() : null;
                 const cs = canSizes.find((value) => value._id == csid);
+
                 const data: ProductCanSize = {
                     id: null,
                     db_version_id: db_version_id,
@@ -459,17 +474,62 @@ export class DBImporter {
             }
         });
 
+        const ids = await prodCanSizesSCH.createMultiple(rows, true);
+        for (let i = 0; i < ids.length; i++) {
+            const id = ids[i].id;
+            rows[i].id = id;
+        }
+
         return rows;
     }
 
-    static async computeSheet_6(workbook: Workbook, db_version_id: any, bases: ProductBase[], canSizes: any[]) {
+    static async computeSheet_6(
+        workbook: Workbook, 
+        db_version_id: any, 
+        bases: ProductBase[], 
+        canSizes: any[], 
+        productBasePSCH: ProductBasePricingsSchema,
+        productsSCH: ProductsSchema,
+        basesSCH: ProductBasesSchema,
+        products: Product[],
+        groups: ProductGroup[]
+    ) {
         const sheet = workbook.getWorksheet('Product_Base_Pricing');
         //Product	Base	Can_Size_ID	Price	Can_Name (For user, ignore for importing)	Base_Cansize_QRCode	MarkUp_Price01	MarkUp_Price02	MarkUp_Price03	Default_MarkUp_Price
         let rows: any[] = [];
-        sheet?.eachRow((row, rowNum) => {
+        sheet?.eachRow(async (row, rowNum) => {
             if (rowNum !== 1) {
-                const pbid = row.getCell(2).value ? row.getCell(2).value?.toString() : null;
-                const pb = bases.find((value) => value.name == pbid);
+                const pbid = row.getCell(2).value ? row.getCell(2).value?.toString()! : '';
+                let pb = bases.find((value) => value.name == pbid);
+
+                if(!pb){
+                    const pid = row.getCell(1).value ? row.getCell(1).value?.toString()! : '';
+                    const ps = await productsSCH.getByName(pid);
+                    let p = null;
+                    if(ps.length > 0){
+                        //get existing product
+                        p = ps[0];
+                    }else{
+                        //create new product
+                        p = {
+                            id: null,
+                            db_version_id: db_version_id,
+                            product_group_id: groups[0].id,
+                            name: pid
+                        } as Product;
+                        const id = await productsSCH.create(p);
+                        p.id = id[0].id;
+                    }
+
+                    pb = {
+                        id: null,
+                        db_version_id: db_version_id,
+                        product_id: p.id,
+                        name: pbid
+                    };
+                    const id = await basesSCH.create(pb);
+                    pb.id = id[0].id;
+                }
 
                 const csid = row.getCell(3).value ? row.getCell(3).value?.toString() : null;
                 const cs = canSizes.find((value) => value._id == csid);
@@ -489,10 +549,16 @@ export class DBImporter {
             }
         });
 
+        const ids = await productBasePSCH.createMultiple(rows, true);
+        for (let i = 0; i < ids.length; i++) {
+            const id = ids[i].id;
+            rows[i].id = id;
+        }
+
         return rows;
     }
 
-    static async computeSheet_7(workbook: Workbook, db_version_id: any, canSizes: any[]) {
+    static async computeSheet_7(workbook: Workbook, db_version_id: any, canSizes: any[], generalPSCH: GeneralPricingsSchema) {
         const sheet = workbook.getWorksheet('General_Pricing');
         //Can_ID	Price	MarkUp_Price01	MarkUp_Price02	MarkUp_Price03	Default_MarkUp_Price	
         let rows: any[] = [];
@@ -513,6 +579,12 @@ export class DBImporter {
                 rows.push(data);
             }
         });
+
+        const ids = await generalPSCH.createMultiple(rows, true);
+        for (let i = 0; i < ids.length; i++) {
+            const id = ids[i].id;
+            rows[i].id = id;
+        }
 
         return rows;
     }

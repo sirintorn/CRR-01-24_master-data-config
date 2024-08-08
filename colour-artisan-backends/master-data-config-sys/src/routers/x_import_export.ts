@@ -133,7 +133,10 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                     workbook, 
                     db_version_id, 
                     products, 
-                    can_sizes
+                    can_sizes,
+                    prodCanSizesSCH,
+                    productsSCH,
+                    product_groups
                 );
 
                 //#6
@@ -142,7 +145,12 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                     workbook, 
                     db_version_id,
                     product_bases,
-                    can_sizes
+                    can_sizes,
+                    productBasePSCH,
+                    productsSCH,
+                    basesSCH,
+                    products,
+                    product_groups
                 );
 
                 //#7
@@ -150,7 +158,8 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                 const general_pricings = await DBImporter.computeSheet_7(
                     workbook, 
                     db_version_id,
-                    can_sizes
+                    can_sizes,
+                    generalPSCH
                 );
 
                 //NON

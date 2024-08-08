@@ -91,6 +91,17 @@ export class ProductsSchema extends TableRecordsSchema{
         });
     }
 
+    getByName(name: any): Promise<Product[]>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.select('*').where('name', name).where('deleted_at', null).then((val) => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
     deleteByDBVersion(db_version_id: any): Promise<any>{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
