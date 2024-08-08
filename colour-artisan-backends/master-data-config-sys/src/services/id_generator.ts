@@ -2,7 +2,11 @@ import { generateCustomUuid, generateTimestampId } from "custom-uuid";
 
 export class IDGenerator {
     static newUUID(){
-        return generateCustomUuid('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
+        const key1 = generateCustomUuid('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 4);
+        const keym = generateCustomUuid('?!@#$&-_+=', 1);
+        const key2 = generateCustomUuid('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 4);
+        const keyl = generateCustomUuid('?!@#$&-_+=', 1);
+        return key1+keym+key2+keyl;
     }
 
     static newFormulaBookFileName(){

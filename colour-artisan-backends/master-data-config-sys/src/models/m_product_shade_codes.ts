@@ -217,6 +217,20 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
         return super.deleteMultiple(ids);
     }
 
+    deleteByDBVersion(db_version_id: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.update({deleted_at: DB.fn.now()})
+            .where('db_version_id', db_version_id)
+            .where('deleted_at', null)
+            .then(val => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
 
 }
 

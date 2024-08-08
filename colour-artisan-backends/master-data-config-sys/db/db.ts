@@ -143,7 +143,6 @@ export class TableRecordsSchema{
             });
         });
     }
-
 }
 
 //to generate new migration

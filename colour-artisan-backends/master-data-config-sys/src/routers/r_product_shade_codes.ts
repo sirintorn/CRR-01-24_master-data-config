@@ -6,6 +6,8 @@ import { ProductsSchema } from "../models/m_products";
 import { ProductBasesSchema } from "../models/m_product_bases";
 import { SubProductsSchema } from "../models/m_sub_products";
 import { CanSizesSchema } from "../models/m_can_sizes";
+import { DtoGetShadeCode } from "../dtos/dto_get_shade_code";
+import { DBVersionsSchema } from "../models/m_db_versions";
 
 
 export const ProductShadeCodesRoute = Router();
@@ -173,6 +175,70 @@ ProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id').get(async (
 
         const result = {
             items: items,
+            count: Number(count[0].count),
+            searchFilters: searchFilters,
+            paginationConfig: paginationConfig,
+        }
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+
+//DTO Version
+ProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id/dto').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+        const keywords = req.query.keyw || '';
+        const group = req.query.group || '';
+        const product = req.query.prod || '';
+        const sub_product = req.query.subp || '';
+        const base = req.query.base || '';
+        
+        const searchFilters: SearchFilters = {
+            keywords: keywords as string,
+            product_group_id: group as string,
+            product_id: product as string,
+            sub_product_id: sub_product as string,
+            product_base_id: base as string
+        }
+
+        const limit = req.query.limit || null;
+        const offset = req.query.offset || null;
+
+        const paginationConfig: PaginationConfig = {
+            limit: Number(limit),
+            offset: Number(offset)
+        }
+
+        const table = new ProductShadeCodesSchema();
+        const items: any[]  = await table.getByDBVersionFiltered(db_version_id, searchFilters, paginationConfig);
+        const count = await table.getByDBVersionFilteredCount(db_version_id, searchFilters);
+
+        const dbVersionSchema = new DBVersionsSchema();
+        const db = await dbVersionSchema.get(db_version_id);
+
+        const pgSchema = new ProductGroupsSchema();
+        const pgs = await pgSchema.getByDBVersion(db_version_id);
+
+        const pSchmea = new ProductsSchema();
+        const ps = await pSchmea.getByDBVersion(db_version_id);
+
+        const pbSchema = new ProductBasesSchema();
+        const pbs = await pbSchema.getByDBVersion(db_version_id);
+
+        const spSchema = new SubProductsSchema();
+        const sps = await spSchema.getByDBVersion(db_version_id);
+        
+        const csSchema = new CanSizesSchema();
+        const css = await csSchema.getByDBVersion(db_version_id);
+
+        const dtos = DtoGetShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
+
+        const result = {
+            items: dtos,
             count: Number(count[0].count),
             searchFilters: searchFilters,
             paginationConfig: paginationConfig,
