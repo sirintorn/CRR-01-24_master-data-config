@@ -1,13 +1,7 @@
-FROM node:latest
+FROM node:22-alpine as base
 
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
+WORKDIR /home/node/app
 
 COPY . .
 
-EXPOSE 4000
-
-CMD ["npm", "start"]
+RUN npm install

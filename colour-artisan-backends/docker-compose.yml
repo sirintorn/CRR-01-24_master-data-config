@@ -1,20 +1,20 @@
-version: '3'
-
 services:
   app:
+    restart: always
     build: 
-      context: .
+      context: ./master-data-config-sys
       dockerfile: Dockerfile
+      target: base
     volumes:
-      - .:/app
-      - dependencies:/app/node_modules
-    working_dir: /app
+      - ./master-data-config-sys:/home/node/app/master-data-config-sys
     depends_on:
       - db
     environment:
       NODE_ENV: development
+    expose:
+      - "4000"
     ports:
-      - 4000:4000
+      - "4000:4000"
     command: npm start
 
   db:
@@ -39,7 +39,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "3000:3000"
 
 volumes:
   dependencies:

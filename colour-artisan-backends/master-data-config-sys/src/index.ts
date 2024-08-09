@@ -9,7 +9,7 @@
 //KNEX: (SQL Schema Builder): npm install knex --save
 //CUSTOM UUID: $ npm i custom-uuid
 
-import express from 'express';
+import express, { Request } from 'express';
 import dotenv from 'dotenv';
 import { routes } from './routers';
 import { CONFIGS } from './configs/configs';
@@ -17,10 +17,9 @@ import { CONFIGS } from './configs/configs';
 const app = express();
 
 
-//import cors from 'cors';
-var cors = require('cors');
-app.use(cors);
-
+import cors from 'cors';
+//app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({}));
+app.use(cors<Request>());
 //var cors = require('cors');
 //app.use(cors());
 //const allowedOrigins = ['http://localhost:3000'];
