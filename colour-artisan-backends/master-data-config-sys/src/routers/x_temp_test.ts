@@ -1,5 +1,5 @@
 import { Router } from "express";
-const axios = require('axios');
+//const axios = require('axios');
 
 export const XTempTest = Router();
 
@@ -14,13 +14,13 @@ XTempTest.route(path).get(async (req, res) => {
             headers: {}
         };
 
-        axios.request(config)
+        /*axios.request(config)
             .then((response: any) => {
                res.status(200).send(response.data);
             })
             .catch((error: any) => {
                 res.status(404).send(error);
-            });
+            });*/
             /*const mockup = {
                 TempoNow: ((Math.random() * 5) + 25).toFixed(6),
                 Humidity: ((Math.random() * 5) + 40).toFixed(6),

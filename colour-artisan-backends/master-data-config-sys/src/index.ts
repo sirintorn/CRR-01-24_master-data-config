@@ -17,8 +17,9 @@ import { CONFIGS } from './configs/configs';
 const app = express();
 
 
-import cors from 'cors';
-app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({}));
+//import cors from 'cors';
+var cors = require('cors');
+app.use(cors);
 
 //var cors = require('cors');
 //app.use(cors());

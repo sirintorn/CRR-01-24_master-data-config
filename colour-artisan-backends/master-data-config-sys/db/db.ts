@@ -23,6 +23,7 @@ export const TABLE_NAMES = {
     ProductBasePricings: 'ProductBasePricings',
     TinterPricings: 'TinterPricings',
     //NOT REALLY PART OF THE SAME SERVICES
+    TintingProfile: 'TintingProfile',
     CircuitInfo: 'CircuitInfo',
     CalibrationInfo: 'CalibrationInfo',
     VolumeCalibrationTarget: 'VolumeCalibrationTarget',

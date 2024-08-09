@@ -1,15 +1,45 @@
 version: '3'
+
 services:
   app:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - .:/usr/src/app/
-      - dependencies:/usr/src/app/node_modules
-    working_dir: /usr/src/app
+      - .:/app
+      - dependencies:/app/node_modules
+    working_dir: /app
+    depends_on:
+      - db
     environment:
-      NODE_ENV: staging
+      NODE_ENV: development
     ports:
       - 4000:4000
-    command: npm run staging
+    command: npm start
+
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin1234
+    #to connect ==> $ psql --host=localhost --port=5432 --username=admin --password
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
 volumes:
   dependencies:
