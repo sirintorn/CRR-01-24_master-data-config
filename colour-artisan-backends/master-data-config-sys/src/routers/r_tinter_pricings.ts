@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { TinterPricing, TinterPricingsSchema } from "../models/m_tinter_pricings";
+import { DtoTinterPricing } from "../dtos/dto_tinter_pricing";
+import { DBConfigsSchema } from "../models/m_db_configs";
 
 export const TinterPricingsRoute = Router();
 
@@ -97,6 +99,30 @@ TinterPricingsRoute.route(path + '/by-db-version/:db_version_id').get(async(req,
 
         if(result)res.status(200).json(result);   
         else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+//GET BY DB VERSION DTO
+TinterPricingsRoute.route(path + '/by-db-version/:db_version_id/dto').get(async(req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+
+        const table = new TinterPricingsSchema();
+        const result: Array<TinterPricing> = await table.getByDBVersion(db_version_id);
+
+        const dbConfigSchema = new DBConfigsSchema();
+        const dbConfig = await dbConfigSchema.get(db_version_id);
+
+        const rows: DtoTinterPricing[] = [];
+        for (let i = 0; i < result.length; i++) {
+            const record = result[i];
+            const dt = new DtoTinterPricing(dbConfig, record);
+            rows.push(dt);
+        }
+
+       res.status(200).json(rows);   
     } catch (error: any) {
         res.status(400).send(error);
     }

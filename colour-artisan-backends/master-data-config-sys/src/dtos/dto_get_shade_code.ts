@@ -5,8 +5,9 @@ import { ProductGroup } from "../models/m_product_groups";
 import { ProductShadeCode } from "../models/m_product_shade_codes";
 import { Product } from "../models/m_products";
 import { SubProduct } from "../models/m_sub_products";
+import { DTO } from "./dto";
 
-export class DtoGetShadeCode {
+export class DtoGetShadeCode extends DTO {
     shadeCode!: string;
     shadeName!: string;
 
@@ -34,6 +35,7 @@ export class DtoGetShadeCode {
         subProduct?: SubProduct, 
         canSize?: CanSize
     ){
+        super();
         this.id = shade.id;
         this.shadeCode = shade.shade_code;
         this.shadeName = shade.shade_name;
@@ -48,10 +50,6 @@ export class DtoGetShadeCode {
         this.subProductName = subProduct ? subProduct.name : '';
         this.canSizeName = canSize ? canSize.display_name : '';
         this.productGroupName = group ? group.name : '';
-    }
-
-    toObject(): any{
-        return Object.assign({}, this);
     }
 
     static parseFromArray(

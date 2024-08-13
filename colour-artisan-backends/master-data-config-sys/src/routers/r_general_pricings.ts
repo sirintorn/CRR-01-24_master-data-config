@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { GeneralPricing, GeneralPricingsSchema } from "../models/m_general_pricings";
 import { CanSize, CanSizesSchema } from "../models/m_can_sizes";
+import { DBConfigsSchema } from "../models/m_db_configs";
+import { DtoGeneralPricing } from "../dtos/dto_general_pricing";
 ;
 
 export const GeneralPricingRoute = Router();
@@ -112,3 +114,32 @@ GeneralPricingRoute.route(path + '/by-db-version/:db_version_id').get(async (req
         res.status(400).send(error);
     }
 });
+
+//GET BY DB VERSION DTO
+GeneralPricingRoute.route(path + '/by-db-version/:db_version_id/dto').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+        
+        const table = new GeneralPricingsSchema();
+        const items: Array<any> = await table.getByDBVersion(db_version_id);
+
+        const dbConfigSchema = new DBConfigsSchema();
+        const dbConfig = await dbConfigSchema.get(db_version_id);
+
+        const canSizesSchema = new CanSizesSchema();
+        const canSizes = await canSizesSchema.getByDBVersion(db_version_id);
+
+        let rows: DtoGeneralPricing[] = [];
+        for (let i = 0; i < items.length; i++) {
+            let record = items[i];
+            const canSize = canSizes.find((value) => { if(value.id == record.can_size_id) return value; });
+            let dt = new DtoGeneralPricing(dbConfig, record, canSize!);
+            rows.push(dt);
+        }
+        res.status(200).json(rows);  
+
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+

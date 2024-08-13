@@ -2,6 +2,8 @@ import { Router } from "express";
 import { ProductCanSize, ProductCanSizesSchema } from "../models/m_product_can_sizes";
 import { ProductsSchema } from "../models/m_products";
 import { CanSizesSchema } from "../models/m_can_sizes";
+import { CanUnitsSchema } from "../models/m_can_units";
+import { DtoGetProductCanSize } from "../dtos/dto_get_product_can_size";
 
 
 export const ProductCanSizesRoute = Router();
@@ -166,6 +168,35 @@ ProductCanSizesRoute.route(path + '/by-product/:product_id').get(async (req, res
 
         if(items)res.status(200).json(items);   
         else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+//GET BY PRODUCT DTO
+ProductCanSizesRoute.route(path + '/by-product/:product_id/dto').get(async (req, res) => {
+    try {
+        const product_id = req.params.product_id;
+        
+        const table = new ProductCanSizesSchema();
+        const items: Array<ProductCanSize> = await table.getByProduct(product_id);
+
+        const canSizesSchema = new CanSizesSchema();
+        const canUnitsSchema = new CanUnitsSchema();
+
+        let dtos: DtoGetProductCanSize[] = [];
+        for (let i = 0; i < items.length; i++) {
+            const record = items[i];
+
+            const canSize = await canSizesSchema.get(record.can_size_id);
+
+            const canUnit = await canUnitsSchema.get(canSize.can_unit_id);
+
+            const dt = new DtoGetProductCanSize(record, canSize, canUnit);
+
+            dtos.push(dt);
+        }
+        res.status(200).json(dtos);   
     } catch (error: any) {
         res.status(400).send(error);
     }
