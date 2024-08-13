@@ -149,25 +149,18 @@ ProductCanSizesRoute.route(path + '/by-product/:product_id').get(async (req, res
         const items: Array<any> = await table.getByProduct(product_id);
 
         const productsSchema = new ProductsSchema();
-        const products = await productsSchema.getByDBVersionLite(product_id);
+        const product = await productsSchema.get(product_id);
 
         const canSizesSchema = new CanSizesSchema();
-        const canSizes = await canSizesSchema.getByDBVersion(product_id);
 
         for (let i = 0; i < items.length; i++) {
             const record = items[i];
-            
-            const p = products.find((value) => {
-                if(value.id == record.product_id) return value;
-            });
 
-            const c = canSizes.find((value) => {
-                if(value.id == record.can_size_id) return value;
-            });
+            const canSizes = await canSizesSchema.get(record.can_size_id);
 
             record['_data'] = {
-                product: p,
-                can_size: c
+                product: product,
+                can_size: canSizes
             }   
         }
 
