@@ -39,12 +39,13 @@ app.set('trust proxy', true);
 dotenv.config(); //config to read .env file
 const NAME = process.env.NAME as string;
 const API = process.env.API as string;
+const ENV = process.env.NODE_ENV as string;
 const API_DOCS = process.env.API_DOCS as string;
 const PORT = Number(process.env.PORT);
 
 async function onStart() {
     try {
-        console.log(`Server running on port ${PORT} - Project: ${NAME}`);
+        console.log(`Server running on port ${PORT} - ENV: ${ENV} - Project: ${NAME}`);
         //await PostGreSQLDB.DBClient.connectDB();  
         console.log('testing uuid generator', IDGenerator.newUUID(), IDGenerator.newUUID(), IDGenerator.newUUID());
     } catch (error: any) {

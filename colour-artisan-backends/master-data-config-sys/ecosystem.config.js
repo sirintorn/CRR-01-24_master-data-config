@@ -2,7 +2,7 @@ module.exports = {
     apps: [
       {
         name: "master-data-config",
-        script: "./src/index.ts",
+        script: "./src/index.js",
         instances: 1,
         autorestart: true,
         watch: false,
@@ -13,7 +13,7 @@ module.exports = {
         log_date_format: "DD-MM HH:mm:ss Z",
         log_type: "json",
         env: {
-          NODE_ENV: "development",
+          NODE_ENV: "staging",
           PORT: 4000,
          },
       },
