@@ -35,6 +35,8 @@ import { XProductRoute } from "./x_product";
 import { AppRoute } from "./r_app";
 import { XImportExport } from "./x_import_export";
 import { ZDispenseHistory } from "./z_dispense_history";
+import { CTintingProfile } from "./c_tinting_profile";
+import { CMachine } from "./c_machine";
 
 export const routes = Router();
 
@@ -79,6 +81,11 @@ routes.use(AppRoute);
 //19
 routes.use(XImportExport);
 
+//20
+routes.use(CTintingProfile);
+
+//21
+routes.use(CMachine);
 
 //special
 routes.use(XTempTest);

@@ -5,12 +5,23 @@ import { IDGenerator } from "../../src/services/id_generator";
 export async function up(knex: Knex): Promise<void> {
     //CREATE TABLES RELATED TO CALIBRATION SYSTEM
     return knex.schema
-        .createTableIfNotExists(TABLE_NAMES.TintingProfile, (table) => {
+        .createTableIfNotExists(TABLE_NAMES.Machine, (table) => {
             table.string('id', 10).notNullable().defaultTo(IDGenerator.newUUID());
 
             table.string('company_id', 10).notNullable();
             table.string('machine_serial_no', 20).notNullable(); //20 byte ascii
             table.string('bluetooh_mac_address', 17).notNullable();
+
+            table.timestamps(true, true, false);
+            table.string('created_by', 10);
+            table.string('updated_by', 10);
+            table.string('deleted_by', 10);
+            table.timestamp('deleted_at');
+        })
+        .createTableIfNotExists(TABLE_NAMES.TintingProfile, (table) => {
+            table.string('id', 10).notNullable().defaultTo(IDGenerator.newUUID());
+
+            table.string('machine_id', 20).notNullable(); //20 byte ascii
 
             table.timestamps(true, true, false);
             table.string('created_by', 10);

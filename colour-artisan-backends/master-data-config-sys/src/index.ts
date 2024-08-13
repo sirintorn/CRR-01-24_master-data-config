@@ -58,9 +58,9 @@ import { IDGenerator } from './services/id_generator';
 
 const specs = swaggerJSDoc.default(CONFIGS.swaggerOptions);
 
-app.listen(PORT, "127.0.0.1", 4000, onStart);
+//app.listen(PORT, "127.0.0.1", 4000, onStart);
 
-//app.listen(PORT, "0.0.0.0",onStart);
+app.listen(PORT, onStart);
 
 //add swagger
 app.use(API_DOCS, swaggerUI.serve, swaggerUI.setup(specs, {explorer: true}));

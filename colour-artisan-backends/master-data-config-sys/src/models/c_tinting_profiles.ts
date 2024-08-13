@@ -1,7 +1,11 @@
-import { TableRecord } from "../../db/db";
+import { DB, TABLE_NAMES, TableRecord, TableRecordsSchema } from "../../db/db";
 
 export interface TintingProfile extends TableRecord{
-    company_id: any,
     machine_id: any,
-    blue_mac_addr: string,
+}
+
+export class TintingProfileSchema extends TableRecordsSchema{
+    constructor(){
+        super(TABLE_NAMES.TintingProfile);
+    }
 }

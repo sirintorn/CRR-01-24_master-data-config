@@ -30,6 +30,8 @@ export const TABLE_NAMES = {
     StepCalibrationTarget: 'StepCalibrationTarget',
     AccuracyTestTarget: 'AccuracyTestTarget',
     //NOT REALLY PART OF THE SAME SERVICES
+    Machine: 'Machine',
+    //NOT REALLY PART OF THE SAME SERVICES
     DispenseHistory: 'DispenseHistory',
     DispenseHistoryTinters: 'DispenseHistoryTinters',
     //NOT REALLY PART OF THE SAME SERVICES
@@ -165,6 +167,19 @@ export class TableRecordsSchema{
                 resolve(ids);
             }).catch(error => {
                 reject(error)
+            });
+        });
+    }
+
+    forceDelete(id: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<any>(this.tableName);
+            table.delete()
+            .where('id', id)
+            .then(val => {
+                resolve(val);
+            }).catch(error => {
+                reject(error);
             });
         });
     }

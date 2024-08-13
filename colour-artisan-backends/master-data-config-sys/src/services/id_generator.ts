@@ -13,4 +13,8 @@ export class IDGenerator {
     static newFormulaBookFileName(){
         return generateTimestampId() + ".xlsx";
     }
+
+    static newTintingProfileFileName(){
+        return generateTimestampId() + ".xlsx";
+    }
 }
