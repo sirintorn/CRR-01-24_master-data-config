@@ -1,4 +1,3 @@
-import { MachineSchema } from "../models/b_machines";
 import { AccuracyTestTargetSchema } from "../models/c_accuracy_test_targets";
 import { CalibrationInfoSchema } from "../models/c_calibration_infos";
 import { CircuitInfoSchema } from "../models/c_circuit_infos";

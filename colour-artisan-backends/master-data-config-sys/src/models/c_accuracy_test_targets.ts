@@ -1,6 +1,6 @@
-import { DB, TABLE_NAMES, TableRecordsSchema } from "../../db/db";
+import { DB, TABLE_NAMES, TableRecord, TableRecordsSchema } from "../../db/db";
 
-export interface AccuracyTestTarget{
+export interface AccuracyTestTarget extends TableRecord{
     //Target ml.	
     //Repeat
     tinting_profile_id: any,

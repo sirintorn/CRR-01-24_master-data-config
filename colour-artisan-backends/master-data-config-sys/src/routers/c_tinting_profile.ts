@@ -1,7 +1,8 @@
 import { Router } from "express";
 import multer from "multer";
+import fs from "fs";
 import { IDGenerator } from "../services/id_generator";
-import { TintingProfileSchema } from "../models/c_tinting_profiles";
+import { TintingProfile, TintingProfileSchema } from "../models/c_tinting_profiles";
 import { CircuitInfoSchema } from "../models/c_circuit_infos";
 import { CalibrationInfoSchema } from "../models/c_calibration_infos";
 import { VolumeCalibrationTargetSchema } from "../models/c_volume_calibration_target";
@@ -9,7 +10,9 @@ import { StepCalibrationTargetSchema } from "../models/c_step_calibration_target
 import { AccuracyTestTargetSchema } from "../models/c_accuracy_test_targets";
 import { MachineSchema } from "../models/b_machines";
 import { TPCleanser } from "../services/tp_cleanser";
+import { TPImporter } from "../services/tp_importer";
 import { DispenseInterpolation } from "../services/interpolation";
+import { Workbook } from "exceljs";
 
 export const CTintingProfile = Router();
 
@@ -68,10 +71,50 @@ CTintingProfile.route(path + '/:machine_id/import').post(async (req, res) => {
         const stepCalibrationTargetSCH = new StepCalibrationTargetSchema();
         const accuracyTestTargetSCH = new AccuracyTestTargetSchema();
 
-        await TPCleanser.clearDB(machine_id, tintingProfileSCH, circuitInfoSCH, calibrationInfoSCH, volumeCalibrationTargetSCH, stepCalibrationTargetSCH, accuracyTestTargetSCH);
-        //to be continue
+        upload(req, res, async function (err) {
+            if (err instanceof multer.MulterError) {
+                // A Multer error occurred when uploading.
+                res.status(400).send(err);
+            } else if (err) {
+                // An unknown error occurred when uploading.
+                res.status(400).send(err);
+            } else {
+                // Everything went fine.
+
+                const workbook = new Workbook();
+                await workbook.xlsx.readFile(req.file?.path || '');
+
+                //#0
+                await TPCleanser.clearDB(machine_id, tintingProfileSCH, circuitInfoSCH, calibrationInfoSCH, volumeCalibrationTargetSCH, stepCalibrationTargetSCH, accuracyTestTargetSCH);
+                //to be continue
+
+                let result: any = {};
+
+                let tp: TintingProfile = {
+                    id: machine_id,
+                    machine_id: machine_id
+                };
+
+                result.tintingProfile = await tintingProfileSCH.create(tp, false);
+
+                result.circuitInfos = await TPImporter.compute_sheet1(workbook, machine_id, circuitInfoSCH);
+
+                result.calibrationInfos = await TPImporter.compute_sheet2(workbook, machine_id, calibrationInfoSCH);
+
+                result.volumeCalibrationTargets = await TPImporter.compute_sheet3(workbook, machine_id, volumeCalibrationTargetSCH);
+
+                result.stepCalibrationTargets = await TPImporter.compute_sheet4(workbook, machine_id, stepCalibrationTargetSCH);
+
+                result.accuracyTestTargets = await TPImporter.compute_sheet5(workbook, machine_id, accuracyTestTargetSCH);
+
+                res.status(200).json(result);
+            }
 
 
+            setTimeout(async () => {
+                await fs.unlinkSync(req.file?.path || '');
+            }, (1 * 60 * 1000)); //file will be deleted after 1 minutes
+        });
     } catch (error) {
         res.status(400).send(error);
     }
@@ -137,7 +180,7 @@ CTintingProfile.route(path + '/accuracy-test-target/multiple').post(async (req, 
     }
 });
 
-CTintingProfile.route(path + '/tests/interpolation').get(async(req, res) => {
+CTintingProfile.route(path + '/tests/interpolation').get(async (req, res) => {
     try {
         let calibrationInfos = [
             {
