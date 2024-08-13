@@ -11,6 +11,7 @@ export interface CircuitInfo extends TableRecord{
     //Refill Level	
     //Cutoff Level	
     //Current Level
+    tinting_profile_id: any,
     enabled: boolean,
     index: number,
     tinter_code: string,

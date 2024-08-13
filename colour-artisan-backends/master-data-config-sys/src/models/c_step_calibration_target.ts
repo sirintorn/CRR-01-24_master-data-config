@@ -4,6 +4,7 @@ export interface StepCalibrationTarget extends TableRecord{
     //Target Step	
     //Target %Error	
     //Repeat
+    tinting_profile_id: any,
     target_step: number,
     target_err_rate: number,
     repeat: number

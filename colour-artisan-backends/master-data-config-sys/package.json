@@ -5,8 +5,10 @@
   "main": "./src/index.ts",
   "scripts": {
     "start": "nodemon",
-    "staging": "NODE_ENV=staging PORT=4001 nodemon",
-    "build": "tsc --project ./",
+    "staging": "node ./src/index.js",
+    "production": "node ./src/index.js",
+    "copy": "cp package.json dist/ && cp README.md dist/ && cp .staging.env dist/.env",
+    "build": "npm run copy && tsc --project ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

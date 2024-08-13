@@ -15,6 +15,7 @@ export interface CalibrationInfo extends TableRecord{
     //Status	
     //Created	
     //Modified
+    tinting_profile_id: any,
     index: number,
     tinter_code: string,
     tinter_name: string,

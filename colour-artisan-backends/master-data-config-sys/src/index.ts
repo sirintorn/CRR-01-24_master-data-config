@@ -38,9 +38,9 @@ app.set('trust proxy', true);
 
 dotenv.config(); //config to read .env file
 const NAME = process.env.NAME as string;
-const PORT = process.env.PORT;
 const API = process.env.API as string;
 const API_DOCS = process.env.API_DOCS as string;
+const PORT = Number(process.env.PORT);
 
 async function onStart() {
     try {
@@ -58,7 +58,9 @@ import { IDGenerator } from './services/id_generator';
 
 const specs = swaggerJSDoc.default(CONFIGS.swaggerOptions);
 
-app.listen(PORT, onStart);
+app.listen(PORT, "127.0.0.1", 4000, onStart);
+
+//app.listen(PORT, "0.0.0.0",onStart);
 
 //add swagger
 app.use(API_DOCS, swaggerUI.serve, swaggerUI.setup(specs, {explorer: true}));

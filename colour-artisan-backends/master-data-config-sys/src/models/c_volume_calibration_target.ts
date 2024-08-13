@@ -4,6 +4,7 @@ export interface VolumeCalibrationTarget extends TableRecord{
     //Target ml.	
     //Target %Error	
     //Repeat
+    tinting_profile_id: any,
     target_ml: number,
     target_err_rate: number,
     repeat: number
