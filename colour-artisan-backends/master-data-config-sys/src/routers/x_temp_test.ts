@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { DispenseInterpolation } from "../services/interpolation";
 //const axios = require('axios');
 
 export const XTempTest = Router();
@@ -7,12 +8,13 @@ const path = '/temp-test';
 
 XTempTest.route(path).get(async (req, res) => {
     try {
-        let config = {
+
+        /*let config = {
             method: 'get',
             maxBodyLength: Infinity,
             url: 'http://192.168.1.109:8080/v1/train-station/gettemp',
             headers: {}
-        };
+        };*/
 
         /*axios.request(config)
             .then((response: any) => {
