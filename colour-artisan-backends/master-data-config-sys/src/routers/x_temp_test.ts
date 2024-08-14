@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { DispenseInterpolation } from "../services/interpolation";
-//const axios = require('axios');
+import axios from 'axios';
 
 export const XTempTest = Router();
 
@@ -34,4 +34,24 @@ XTempTest.route(path).get(async (req, res) => {
     }
 });
 
+XTempTest.route(path + "/external-db").get(async(req, res) => {
+    try {
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: 'http://192.168.1.109:8080/v1/train-station/gettemp',
+            headers: {}
+        };
+
+        axios.request(config)
+            .then((response: any) => {
+               res.status(200).send(response.data);
+            })
+            .catch((error: any) => {
+                res.status(404).send(error);
+            });
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
 
