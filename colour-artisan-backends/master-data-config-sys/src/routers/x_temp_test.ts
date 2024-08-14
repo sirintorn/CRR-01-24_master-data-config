@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { DispenseInterpolation } from "../services/interpolation";
 import axios from 'axios';
 
 export const XTempTest = Router();

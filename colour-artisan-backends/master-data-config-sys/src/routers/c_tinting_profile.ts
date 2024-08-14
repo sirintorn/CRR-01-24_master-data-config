@@ -11,7 +11,7 @@ import { AccuracyTestTargetSchema } from "../models/c_accuracy_test_targets";
 import { MachineSchema } from "../models/b_machines";
 import { TPCleanser } from "../services/tp_cleanser";
 import { TPImporter } from "../services/tp_importer";
-import { DispenseInterpolation } from "../services/interpolation";
+import { DispenseInterpolation } from "../services/android-app/interpolation";
 import { Workbook } from "exceljs";
 
 export const CTintingProfile = Router();
