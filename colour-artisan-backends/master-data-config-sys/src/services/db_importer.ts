@@ -15,7 +15,8 @@ import { ProductShadeCodesSchema } from "../models/m_product_shade_codes";
 
 export class DBImporter {
 
-    static async computeSheet_1(workbook: Workbook, db_version_id: any, canSizes: any[],
+    static async computeSheet_1(workbook: Workbook, db_version_id: any, canSizes: any[], 
+        tinterPricings: TinterPricing[],
         groupsSCH: ProductGroupsSchema,
         productsSCH: ProductsSchema,
         subProdSCH: SubProductsSchema,
@@ -199,6 +200,10 @@ export class DBImporter {
                         if (amount > 0) {
                             t.tinter_code = label;
                             t.amount = amount;
+                            let tp: TinterPricing = tinterPricings.find((value) => value.tinter_code == t.tinter_code)!;
+                            t.red = tp ? tp.red : 0;
+                            t.green = tp ? tp.green : 0;
+                            t.blue = tp ? tp.blue : 0;
                             tinters.push(t);
                         }
                     });

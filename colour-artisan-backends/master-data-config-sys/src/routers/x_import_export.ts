@@ -114,6 +114,7 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                     workbook, 
                     db_version_id,
                     can_sizes,
+                    tinter_pricings,
                     groupsSCH,
                     productsSCH,
                     subProdSCH,
