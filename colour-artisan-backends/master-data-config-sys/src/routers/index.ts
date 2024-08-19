@@ -37,6 +37,8 @@ import { XImportExport } from "./x_import_export";
 import { ZDispenseHistory } from "./z_dispense_history";
 import { CTintingProfile } from "./c_tinting_profile";
 import { CMachine } from "./c_machine";
+import { CustomProductShadeCodesRoute } from "./r_custom_product_shade_codes";
+import { CustomProductTintersRoute } from "./r_custom_product_tinters";
 
 export const routes = Router();
 
@@ -86,6 +88,12 @@ routes.use(CTintingProfile);
 
 //21
 routes.use(CMachine);
+
+//22
+routes.use(CustomProductShadeCodesRoute);
+
+//23
+routes.use(CustomProductTintersRoute);
 
 //special
 routes.use(XTempTest);

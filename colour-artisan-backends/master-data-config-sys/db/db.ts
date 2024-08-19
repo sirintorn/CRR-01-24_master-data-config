@@ -22,6 +22,10 @@ export const TABLE_NAMES = {
     GeneralPricings: 'GeneralPricings',
     ProductBasePricings: 'ProductBasePricings',
     TinterPricings: 'TinterPricings',
+    //CUSTOMIZE
+    CustomProductShadeCodes: 'CustomProductShadeCodes',
+    CustomProductTinters: 'CustomProductTinters',
+    //CUSTOMIZE
     //NOT REALLY PART OF THE SAME SERVICES
     TintingProfile: 'TintingProfile',
     CircuitInfo: 'CircuitInfo',
