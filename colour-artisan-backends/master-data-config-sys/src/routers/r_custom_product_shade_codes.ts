@@ -290,7 +290,6 @@ CustomProductShadeCodesRoute.route(path + '/by-db-version-x/:db_version_id').get
             product_base_id: base as string
         }
 
-        console.log(searchFilters)
 
         const limit = req.query.limit || null;
         const offset = req.query.offset || null;
@@ -489,8 +488,12 @@ CustomProductShadeCodesRoute.route(path + '/dto/create').post(async (req, res) =
             remark: ''
         };
 
+
         const table = new CustomProductShadeCodesSchema();
+
         const result: any = await table.create(newShade);
+
+
         const shade_id = result[0].id;
 
         let newTinters: CustomProductTinter[] = [];
@@ -511,8 +514,8 @@ CustomProductShadeCodesRoute.route(path + '/dto/create').post(async (req, res) =
             newTinters.push(nt);
         });
 
-        const tinterTable = new CustomProductShadeCodesSchema();
-        const result2 = tinterTable.createMultiple(newTinters, true);
+        const tinterTable = new CustomProductTintersSchema();
+        const result2 = tinterTable.createMultiple(newTinters);
 
         const resultFinal = {
             custom_product_shade: result,
