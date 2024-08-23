@@ -2,7 +2,9 @@ import { DB, TABLE_NAMES, TableRecord, TableRecordsSchema } from '../../db/db';
 
 export interface ProductBase extends TableRecord {
     db_version_id: any,
+    product_group_id: any,
     product_id: any,
+    sub_product_id: any,
     name: string,
 }
 

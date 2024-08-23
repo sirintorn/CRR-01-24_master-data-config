@@ -3,6 +3,8 @@ import { DB, TABLE_NAMES, TableRecord, TableRecordsSchema } from '../../db/db';
 export interface SubProduct extends TableRecord {
     db_version_id: any,
     name: string,
+    product_group_id: any,
+    product_id: any
 }
 
 export class SubProductsSchema extends TableRecordsSchema {

@@ -15,7 +15,7 @@ import { ProductShadeCodesSchema } from "../models/m_product_shade_codes";
 
 export class DBImporter {
 
-    static async computeSheet_1(workbook: Workbook, db_version_id: any, canSizes: any[], 
+    static async computeSheet_1(workbook: Workbook, db_version_id: any, canSizes: any[],
         tinterPricings: TinterPricing[],
         groupsSCH: ProductGroupsSchema,
         productsSCH: ProductsSchema,
@@ -103,6 +103,10 @@ export class DBImporter {
                         const num = val.num;
 
                         const x = row.getCell(num).value ? row.getCell(num).value?.toString()! : null;
+                        //const cellGroup = row.getCell(1).value ? row.getCell(1).value?.toString()! : null;
+                        //const cellProduct = row.getCell(2).value ? row.getCell(2).value?.toString()! : null;
+                        //const cellSubProduct = row.getCell(5).value ? row.getCell(5).value?.toString()! : null;
+
                         switch (label) {
                             case 'shade code':
                                 if (x) {
@@ -134,19 +138,34 @@ export class DBImporter {
                                 break;
                             case 'subproduct':
                                 if (x) {
+                                    const y1 = row.getCell(1).value ? row.getCell(1).value?.toString()! : null;
+                                    const y2 = row.getCell(2).value ? row.getCell(2).value?.toString()! : null;
                                     shade.sub_product_id = x;
-                                    subProductMap[x] = {
-                                        label: x
+                                    if(!subProductMap[y2!]){
+                                        subProductMap[y2!] = {};
+                                    }
+
+                                    subProductMap[y2!][x] = {
+                                        label: x,
+                                        product_group: y1,
+                                        product: y2
                                     };
                                 }
                                 break;
                             case 'base':
                                 if (x) {
-                                    const y = row.getCell(2).value ? row.getCell(2).value?.toString()! : null;
+                                    const y1 = row.getCell(1).value ? row.getCell(1).value?.toString()! : null;
+                                    const y2 = row.getCell(2).value ? row.getCell(2).value?.toString()! : null;
+                                    const y5 = row.getCell(5).value ? row.getCell(5).value?.toString()! : null;
                                     shade.product_base_id = x;
-                                    productBaseMap[x] = {
+                                    if(!productBaseMap[y5!]){
+                                        productBaseMap[y5!] = {}
+                                    }
+                                    productBaseMap[y5!][x] = {
                                         label: x,
-                                        product: y
+                                        product_group: y1,
+                                        product: y2,
+                                        sub_product: y5
                                     };
                                 }
                                 break;
@@ -188,7 +207,7 @@ export class DBImporter {
                         let t: ProductTinter = {
                             id: null,
                             db_version_id: db_version_id,
-                            product_shade_code_id: null,
+                            product_shade_code_id: '',
                             tinter_code: '',
                             amount: 0,
                             sg: 0,
@@ -247,38 +266,54 @@ export class DBImporter {
                 products[i].id = item.id;
             }
 
-            for (var key in productBaseMap) {
-                const item = productBaseMap[key];
-                const p = products.find((value) => value.name == item.product);
-                let data: ProductBase = {
-                    id: null,
-                    db_version_id: db_version_id,
-                    product_id: p ? p.id : '',
-                    name: item.label
-                };
-                product_bases.push(data);
-            }
-
-            const pb_ids = await basesSCH.createMultiple(product_bases, true);
-            for (let i = 0; i < pb_ids.length; i++) {
-                const item = pb_ids[i];
-                product_bases[i].id = item.id;
-            }
-
             for (var key in subProductMap) {
-                const item = subProductMap[key];
-                let data: SubProduct = {
-                    id: null,
-                    db_version_id: db_version_id,
-                    name: item.label
-                };
-                sub_products.push(data);
+                const prod = subProductMap[key];
+                for (var kx in prod) {
+                    const item = prod[kx];
+                    const pg = product_groups.find((value) => value.name == item.product_group);
+                    const p = products.find((value) => (value.name == item.product) && (value.product_group_id == pg!.id));
+                    let data: SubProduct = {
+                        id: null,
+                        db_version_id: db_version_id,
+                        name: item.label ? item.label : '',
+                        product_group_id: pg ? pg.id : '',
+                        product_id: p ? p.id : ''
+                    };
+                    sub_products.push(data);   
+                }
             }
 
             const sp_ids = await subProdSCH.createMultiple(sub_products, true);
             for (let i = 0; i < sp_ids.length; i++) {
                 const item = sp_ids[i];
                 sub_products[i].id = item.id;
+            }
+
+
+            for (var key in productBaseMap) {
+                const subProd = productBaseMap[key];
+                for(var kx in subProd){
+                    const item  = subProd[kx];
+                    const pg = product_groups.find((value) => value.name == item.product_group);
+                    const p = products.find((value) => (value.name == item.product) && (value.product_group_id == pg!.id));
+                    const sp = sub_products.find((value) => (value.name == item.sub_product) && (value.product_id == p!.id) && (value.product_group_id == pg!.id));
+    
+                    let data: ProductBase = {
+                        id: null,
+                        db_version_id: db_version_id,
+                        product_id: p ? p.id : '',
+                        name: item.label,
+                        product_group_id: pg ? pg.id : '',
+                        sub_product_id: sp ? sp.id : ''
+                    };
+                    product_bases.push(data);
+                }
+            }
+
+            const pb_ids = await basesSCH.createMultiple(product_bases, true);
+            for (let i = 0; i < pb_ids.length; i++) {
+                const item = pb_ids[i];
+                product_bases[i].id = item.id;
             }
 
             //PREPARE TO UPLOAD PRODUCT SHADES
@@ -289,18 +324,22 @@ export class DBImporter {
                 const pg = product_groups.find((value) => value.name == pgid);
 
                 const pid = item.product_id;
-                const p = products.find((value) => value.name == pid);
-
-                const pbid = item.product_base_id;
-                const pb = product_bases.find((value) => value.name == pbid);
+                const p = products.find((value) => (value.name == pid) && (value.product_group_id == pg!.id));
 
                 const spid = item.sub_product_id;
-                const sp = sub_products.find((value) => value.name == spid);
+                const sp = sub_products.find((value) => (value.name == spid) && (value.product_id == p!.id) && (value.product_group_id == pg!.id));
+
+                const pbid = item.product_base_id;
+                const pb = product_bases.find((value) => (value.name == pbid) && (value.product_id == p!.id) && (value.product_group_id == pg!.id));
+
+                if(!pb){
+                    console.log('WOT!?', product_bases.find((value) => (value.name == pbid)), sp, p, pg, item);
+                }
 
                 item.product_group_id = pg ? pg.id : '';
                 item.product_id = p ? p.id : '';
-                item.product_base_id = pb ? pb.id : '';
                 item.sub_product_id = sp ? sp.id : '';
+                item.product_base_id = pb ? pb.id : '';
             }
 
             let data = {
@@ -313,7 +352,7 @@ export class DBImporter {
 
             return data;
         } catch (error) {
-            return error;
+            throw error;
         }
     }
 
@@ -328,14 +367,15 @@ export class DBImporter {
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i].id;
             const ts = tints[i];
-            if(ts){
+            if (ts) {
                 for (let k = 0; k < ts.length; k++) {
                     let t = ts[k];
                     t.product_shade_code_id = id;
                 }
-                await tintersSCH.batchInsert(ts, true);   
+                await tintersSCH.batchInsert(ts, true);
             }
         }
+        return;
     }
 
 
@@ -365,7 +405,7 @@ export class DBImporter {
             }
         });
 
-        const ids = await tinterPSCH.createMultiple(rows, true);
+        const ids = await tinterPSCH.batchInsert(rows, true);
 
         for (let i = 0; i < ids.length; i++) {
             const item = ids[i];
@@ -395,7 +435,7 @@ export class DBImporter {
             }
         });
 
-        const ids = await canUnitsSCH.createMultiple(rows, true);
+        const ids = await canUnitsSCH.batchInsert(rows, true);
         for (let i = 0; i < ids.length; i++) {
             const item = ids[i];
             rows[i]._id = old_ids[i];
@@ -429,7 +469,7 @@ export class DBImporter {
             }
         });
 
-        const ids = await canSizesSCH.createMultiple(rows, true);
+        const ids = await canSizesSCH.batchInsert(rows, true);
 
         for (let i = 0; i < ids.length; i++) {
             const item = ids[i];
@@ -455,7 +495,7 @@ export class DBImporter {
             if (rowNum !== 1) {
                 const pid = row.getCell(1).value ? row.getCell(1).value?.toString()! : '';
                 let p = products.find((value) => value.name == pid);
-                if(!p){
+                if (!p) {
                     let newp: Product = {
                         id: null,
                         db_version_id: db_version_id,
@@ -479,7 +519,7 @@ export class DBImporter {
             }
         });
 
-        const ids = await prodCanSizesSCH.createMultiple(rows, true);
+        const ids = await prodCanSizesSCH.batchInsert(rows, true);
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i].id;
             rows[i].id = id;
@@ -489,10 +529,10 @@ export class DBImporter {
     }
 
     static async computeSheet_6(
-        workbook: Workbook, 
-        db_version_id: any, 
-        bases: ProductBase[], 
-        canSizes: any[], 
+        workbook: Workbook,
+        db_version_id: any,
+        bases: ProductBase[],
+        canSizes: any[],
         productBasePSCH: ProductBasePricingsSchema,
         productsSCH: ProductsSchema,
         basesSCH: ProductBasesSchema,
@@ -502,19 +542,20 @@ export class DBImporter {
         const sheet = workbook.getWorksheet('Product_Base_Pricing');
         //Product	Base	Can_Size_ID	Price	Can_Name (For user, ignore for importing)	Base_Cansize_QRCode	MarkUp_Price01	MarkUp_Price02	MarkUp_Price03	Default_MarkUp_Price
         let rows: any[] = [];
+        let newbases: any[] = [];
         sheet?.eachRow(async (row, rowNum) => {
             if (rowNum !== 1) {
                 const pbid = row.getCell(2).value ? row.getCell(2).value?.toString()! : '';
                 let pb = bases.find((value) => value.name == pbid);
 
-                if(!pb){
+                if (!pb) {
                     const pid = row.getCell(1).value ? row.getCell(1).value?.toString()! : '';
-                    const ps = await productsSCH.getByName(pid);
+                    const ps = products.find((value) => value.name == pid);
                     let p = null;
-                    if(ps.length > 0){
+                    if (ps) {
                         //get existing product
-                        p = ps[0];
-                    }else{
+                        p = ps;
+                    } else {
                         //create new product
                         p = {
                             id: null,
@@ -526,14 +567,22 @@ export class DBImporter {
                         p.id = id[0].id;
                     }
 
-                    pb = {
-                        id: null,
-                        db_version_id: db_version_id,
-                        product_id: p.id,
-                        name: pbid
-                    };
-                    const id = await basesSCH.create(pb);
-                    pb.id = id[0].id;
+                    const newpb = newbases.find((value) => value.name == pbid);
+                    if(newpb){
+                        pb = newpb;
+                    }else{
+                        pb = {
+                            id: null,
+                            db_version_id: db_version_id,
+                            product_id: p.id,
+                            name: pbid,
+                            sub_product_id: '',
+                            product_group_id: groups[0].id,
+                        };
+                        const id = await basesSCH.create(pb);
+                        pb.id = id[0].id;
+                        newbases.push(pb);
+                    }
                 }
 
                 const csid = row.getCell(3).value ? row.getCell(3).value?.toString() : null;
@@ -554,7 +603,7 @@ export class DBImporter {
             }
         });
 
-        const ids = await productBasePSCH.createMultiple(rows, true);
+        const ids = await productBasePSCH.batchInsert(rows, true);
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i].id;
             rows[i].id = id;
@@ -585,7 +634,7 @@ export class DBImporter {
             }
         });
 
-        const ids = await generalPSCH.createMultiple(rows, true);
+        const ids = await generalPSCH.batchInsert(rows, true);
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i].id;
             rows[i].id = id;

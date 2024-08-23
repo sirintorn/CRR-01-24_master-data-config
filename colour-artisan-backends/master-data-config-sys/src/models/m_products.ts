@@ -91,10 +91,10 @@ export class ProductsSchema extends TableRecordsSchema{
         });
     }
 
-    getByName(name: any): Promise<Product[]>{
+    getByDBVersionAndName(db_version_id: any, name: any): Promise<Product[]>{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
-            table.select('*').where('name', name).where('deleted_at', null).then((val) => {
+            table.select('*').where('db_version_id', db_version_id).where('name', name).where('deleted_at', null).then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);

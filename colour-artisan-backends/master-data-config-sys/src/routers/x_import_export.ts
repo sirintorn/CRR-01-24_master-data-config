@@ -74,6 +74,10 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                 res.status(400).send(err);
             } else {
                 // Everything went fine.
+                res.status(200).send();//.json(result);
+                setTimeout(async () => {
+                    await fs.unlinkSync(req.file?.path || '');
+                }, (3 * 60 * 1000)); //file will be deleted after 3 minutes
 
                 const workbook = new Workbook();
                 await workbook.xlsx.readFile(req.file?.path || '');
@@ -128,6 +132,7 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                 const product_bases = shadeResults.product_bases;
                 const sub_products = shadeResults.sub_products;
                 const shades = shadeResults.shades;
+                
                 //#5
                 //prod-can-sizes
                 const product_can_sizes = await DBImporter.computeSheet_5(
@@ -182,13 +187,7 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                     general_pricings: general_pricings,
                     db_version: db_version
                 };
-                res.status(200).json(result);
             }
- 
-
-            setTimeout(async () => {
-                await fs.unlinkSync(req.file?.path || '');
-            }, (1 * 60 * 1000)); //file will be deleted after 1 minutes
         });
     } catch (error: any) {
         res.status(400).send(error);
@@ -273,5 +272,46 @@ XImportExport.route(path + '/:db_version_id' + '/export').get(async (req, res) =
         }, (1 * 60 * 1000));
     } catch (error: any) {
         res.status(400).send(error);
+    }
+});
+
+XImportExport.route(path + '/:db_version_id' + '/cleanse').delete(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+
+        const dbConfigSCH = new DBConfigsSchema();
+        const canSizesSCH = new CanSizesSchema();
+        const canUnitsSCH = new CanUnitsSchema();
+        const generalPSCH = new GeneralPricingsSchema();
+        const productBasePSCH = new ProductBasePricingsSchema();
+        const basesSCH = new ProductBasesSchema();
+        const prodCanSizesSCH = new ProductCanSizesSchema();
+        const groupsSCH = new ProductGroupsSchema();
+        const shadesSCH = new ProductShadeCodesSchema();
+        const prodTinterSCH = new ProductTintersSchema();
+        const productsSCH = new ProductsSchema();
+        const subProdSCH = new SubProductsSchema();
+        const tinterPSCH = new TinterPricingsSchema();
+
+        //clear DB
+        await DBCleanser.clearDB(db_version_id,
+            dbConfigSCH,
+            canSizesSCH,
+            canUnitsSCH,
+            generalPSCH,
+            productBasePSCH,
+            basesSCH,
+            prodCanSizesSCH,
+            groupsSCH,
+            shadesSCH,
+            prodTinterSCH,
+            productsSCH,
+            subProdSCH,
+            tinterPSCH
+        );
+
+        res.status(200).send();
+    } catch (error) {
+        res.status(400).send();
     }
 });
