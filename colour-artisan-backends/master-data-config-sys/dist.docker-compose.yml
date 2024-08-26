@@ -11,4 +11,3 @@ services:
     ports:
       - 4000:4000
     command: node ./src/index.js
-  

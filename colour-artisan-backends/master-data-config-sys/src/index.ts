@@ -47,7 +47,7 @@ async function onStart() {
     try {
         console.log(`Server running on port ${PORT} - ENV: ${ENV} - Project: ${NAME}`);
         //await PostGreSQLDB.DBClient.connectDB();  
-        console.log('testing uuid generator', IDGenerator.newUUID(), IDGenerator.newUUID(), IDGenerator.newUUID());
+        //console.log('testing uuid generator', IDGenerator.newUUID(), IDGenerator.newUUID(), IDGenerator.newUUID());
     } catch (error: any) {
         console.log(error);
     }
