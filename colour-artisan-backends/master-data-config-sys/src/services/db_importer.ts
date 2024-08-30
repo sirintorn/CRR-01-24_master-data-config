@@ -171,7 +171,7 @@ export class DBImporter {
                                 break;
                             case 'cansize':
                                 if (x) {
-                                    const c = canSizes.find((value) => value._id == x);
+                                    const c = canSizes.find((value) => value.can_size.toString() == x);
                                     shade.can_size_id = c ? c.id : '';
                                 }
                                 break;
