@@ -4,6 +4,9 @@ export interface Machine extends TableRecord{
     company_id: any,
     machine_serial_no: string,
     bluetooth_mac_address: string,
+    tinting_profile_id?: any,
+    db_version_id?: any,
+    visible?: boolean
 }
 
 export class MachineSchema extends TableRecordsSchema{
@@ -11,9 +14,9 @@ export class MachineSchema extends TableRecordsSchema{
         super(TABLE_NAMES.Machine);
     }
 
-    getByCompany(company_id: any): Promise<any[]>{
+    getByCompany(company_id: any): Promise<Machine[]>{
         return new Promise((resolve, reject) => {
-            const table = DB<any>(this.tableName);
+            const table = DB<Machine>(this.tableName);
             table.select('*')
             .where('company_id', company_id)
             .where('deleted_at', null)
