@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { MachineSchema } from "../models/b_machines";
 import { DtoGetMachine } from "../dtos/dto_get_machine";
+import { DBVersionsSchema } from "../models/m_db_versions";
 
 export const CMachine = Router();
 
@@ -25,7 +26,10 @@ CMachine.route(path + '/by-company/:company_id/dto').get(async (req, res) => {
 
         const machineSCH = new MachineSchema();
         const machines = await machineSCH.getByCompany(company_id);
-        const dtos = DtoGetMachine.parseFromArray(machines);
+        const dbVersionSchema = new DBVersionsSchema();
+        const dbVersions = await dbVersionSchema.getByCompanyId(company_id);
+
+        const dtos = DtoGetMachine.parseFromArray(machines, dbVersions);
 
         res.status(200).send(dtos);
     } catch (error) {

@@ -4,9 +4,10 @@ export interface Machine extends TableRecord{
     company_id: any,
     machine_serial_no: string,
     bluetooth_mac_address: string,
+    bluetooth_no: string,
     tinting_profile_id?: any,
     db_version_id?: any,
-    visible?: boolean
+    visible?: boolean,
 }
 
 export class MachineSchema extends TableRecordsSchema{
