@@ -29,6 +29,7 @@ import { DBImporter } from "../services/db_importer";
 import { DB } from "../../db/db";
 import { DBExporter } from "../services/db_exporter";
 import { DBCleanser } from "../services/db_cleanser";
+import { HTMLRender } from "../services/html_render";
 
 export const XImportExport = Router();
 
@@ -68,13 +69,15 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
         upload(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
                 // A Multer error occurred when uploading.
-                res.status(400).send(err);
+                res.status(400).send(HTMLRender.renderImportFailed());
             } else if (err) {
                 // An unknown error occurred when uploading.
-                res.status(400).send(err);
+                res.status(400).send(HTMLRender.renderImportFailed());
+            } else if (!req.file) {
+                res.status(404).send(HTMLRender.renderImportNotFound());
             } else {
                 // Everything went fine.
-                res.status(200).send();//.json(result);
+                res.status(200).send(HTMLRender.renderImportCompleted());//.json(result);
                 setTimeout(async () => {
                     await fs.unlinkSync(req.file?.path || '');
                 }, (3 * 60 * 1000)); //file will be deleted after 3 minutes
