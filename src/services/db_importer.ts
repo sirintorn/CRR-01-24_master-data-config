@@ -242,7 +242,7 @@ export class DBImporter {
                 product_groups.push(data);
             }
 
-            const pg_ids = await groupsSCH.createMultiple(product_groups, true);
+            const pg_ids = await groupsSCH.batchInsert(product_groups, true);
             for (let i = 0; i < pg_ids.length; i++) {
                 const item = pg_ids[i];
                 product_groups[i].id = item.id;
@@ -260,7 +260,7 @@ export class DBImporter {
                 products.push(data);
             }
 
-            const p_ids = await productsSCH.createMultiple(products, true);
+            const p_ids = await productsSCH.batchInsert(products, true);
             for (let i = 0; i < p_ids.length; i++) {
                 const item = p_ids[i];
                 products[i].id = item.id;
@@ -283,7 +283,7 @@ export class DBImporter {
                 }
             }
 
-            const sp_ids = await subProdSCH.createMultiple(sub_products, true);
+            const sp_ids = await subProdSCH.batchInsert(sub_products, true);
             for (let i = 0; i < sp_ids.length; i++) {
                 const item = sp_ids[i];
                 sub_products[i].id = item.id;
@@ -310,7 +310,7 @@ export class DBImporter {
                 }
             }
 
-            const pb_ids = await basesSCH.createMultiple(product_bases, true);
+            const pb_ids = await basesSCH.batchInsert(product_bases, true);
             for (let i = 0; i < pb_ids.length; i++) {
                 const item = pb_ids[i];
                 product_bases[i].id = item.id;
@@ -372,9 +372,15 @@ export class DBImporter {
                     let t = ts[k];
                     t.product_shade_code_id = id;
                 }
-                await tintersSCH.batchInsert(ts, true);
             }
         }
+        //Sums up all tinters before batchInsert
+        let sumTints = [];
+        for (let k = 0; k < tints.length; k++) {
+            const element = tints[k];
+            sumTints.push(...element);
+        }
+        await tintersSCH.batchInsert(sumTints, true);
         return;
     }
 

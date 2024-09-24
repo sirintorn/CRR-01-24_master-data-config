@@ -80,7 +80,7 @@ XImportExport.route(path + '/:db_version_id' + '/import').post(async function (r
                 res.status(200).send(HTMLRender.renderImportCompleted());//.json(result);
                 setTimeout(async () => {
                     await fs.unlinkSync(req.file?.path || '');
-                }, (3 * 60 * 1000)); //file will be deleted after 3 minutes
+                }, (5 * 60 * 1000)); //file will be deleted after 5 minutes
 
                 const workbook = new Workbook();
                 await workbook.xlsx.readFile(req.file?.path || '');
