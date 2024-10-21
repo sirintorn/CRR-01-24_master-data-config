@@ -292,8 +292,6 @@ ProductShadeCodesRoute.route(path + '/by-db-version-x/:db_version_id').get(async
             product_base_id: base as string
         }
 
-        console.log(searchFilters)
-
         const limit = req.query.limit || null;
         const offset = req.query.offset || null;
 
@@ -309,5 +307,40 @@ ProductShadeCodesRoute.route(path + '/by-db-version-x/:db_version_id').get(async
         else res.status(404).send();
     } catch (error: any) {
         res.status(400).send(error);
+    }
+});
+
+
+//GET WHERE IDS IN
+ProductShadeCodesRoute.route(path + '/where-ids-in').post(async (req, res) => {
+    try {
+        const db_version_id = req.body.db_version_id as string;
+        const ids = req.body.ids as string[];
+
+        const schema = new ProductShadeCodesSchema();
+        let shades = await schema.getWhereIdsIn(ids);
+
+        const dbSchema = new DBVersionsSchema();
+        const db = await dbSchema.get(db_version_id);
+
+        const pgSchema = new ProductGroupsSchema();
+        const pgs = await pgSchema.getByDBVersion(db_version_id);
+
+        const pSchmea = new ProductsSchema();
+        const ps = await pSchmea.getByDBVersion(db_version_id);
+
+        const pbSchema = new ProductBasesSchema();
+        const pbs = await pbSchema.getByDBVersion(db_version_id);
+
+        const spSchema = new SubProductsSchema();
+        const sps = await spSchema.getByDBVersion(db_version_id);
+        
+        const csSchema = new CanSizesSchema();
+        const css = await csSchema.getByDBVersion(db_version_id);
+
+        let result = DtoGetShadeCode.parseFromArray(shades, db, pgs, ps, pbs, sps, css);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(400).send(error);  
     }
 });

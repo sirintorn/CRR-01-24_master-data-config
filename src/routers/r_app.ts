@@ -20,7 +20,8 @@ const path = '/app';
 const appPaths = {
     db: '/db',
     online: '/sync',
-    bill: 'bill'
+    bill: '/bill',
+    fav: '/fav'
 };
 
 //SYNC
@@ -145,3 +146,7 @@ AppRoute.route(path + appPaths.db + '/redeem').get(async (req, res) => {
 
 
 //CALCULATE BILL
+
+
+//GET FAVORITE SHADES FROM FORMULA BOOK AND CUSTOM FORMULA
+//AppRoute.route(path + appPaths.fav)

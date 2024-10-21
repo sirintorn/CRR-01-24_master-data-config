@@ -130,7 +130,7 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
                 table.limit(paginationConfig.limit, { skipBinding: true })
             }
 
-            table.orderBy('updated_at', 'desc');
+            table.orderBy('created_at', 'desc');
             resolve(table.toQuery())
         })
     }
@@ -170,7 +170,7 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
                 table.limit(paginationConfig.limit, { skipBinding: true })
             }
 
-            table.orderBy('updated_at', 'desc');
+            table.orderBy('created_at', 'desc');
             table.then((val) => {
                 resolve(val);
             }).catch(error => {
@@ -238,6 +238,20 @@ export class ProductShadeCodesSchema extends TableRecordsSchema {
             .where('db_version_id', db_version_id)
             .then(val => {
                 resolve(val);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    getWhereIdsIn(ids: string[]): Promise<ProductShadeCode[]>{
+        return new Promise((resolve, reject) => {
+            const table = DB<ProductShadeCode>(this.tableName);
+            table.select('*')
+            .whereIn('id', ids)
+            .where('deleted_at', null)
+            .then((vals) => {
+                resolve(vals);
             }).catch(error => {
                 reject(error);
             });

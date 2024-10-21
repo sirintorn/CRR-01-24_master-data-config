@@ -312,6 +312,20 @@ export class CustomProductShadeCodesSchema extends TableRecordsSchema {
             });
         });
     }
+
+    getWhereIdsIn(ids: string[]): Promise<CustomProductShadeCode[]>{
+        return new Promise((resolve, reject) => {
+            const table = DB<CustomProductShadeCode>(this.tableName);
+            table.select('*')
+            .whereIn('id', ids)
+            .where('deleted_at', null)
+            .then((vals) => {
+                resolve(vals);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }
 
 

@@ -135,9 +135,11 @@ ProductTintersRoute.route(path + '/multiple/smart').put(async (req, res) => {
 
         const table = new ProductTintersSchema();
 
-        const resultCreates: any = await table.createMultiple(_creates);
-        const resultDeletes: any = await table.deleteMultiple(_deletes);
+        let resultCreates: any[] = [];
+        let resultDeletes: any[] = [];
         let resultUpdates: any[] = [];
+        if(_creates.length > 0) resultCreates = await table.createMultiple(_creates);
+       if(_deletes.length > 0) resultDeletes = await table.deleteMultiple(_deletes);
         for (let k = 0; k < _updates.length; k++) {
             const item = _updates[k];
             const result: any = await table.update(item.id, item);
@@ -150,10 +152,10 @@ ProductTintersRoute.route(path + '/multiple/smart').put(async (req, res) => {
             _updates: resultUpdates
         };
 
-        res.status(200).json(result);
+        res.status(200).send(result);
 
     } catch (error: any) {
         if (error.status && error.status == 409) res.status(409).send();
-        res.status(400).send(error);
+        else res.status(400).send(error);
     }
 });

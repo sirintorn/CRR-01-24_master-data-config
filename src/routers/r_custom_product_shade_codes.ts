@@ -529,3 +529,38 @@ CustomProductShadeCodesRoute.route(path + '/dto/create').post(async (req, res) =
         else res.status(400).send(error);
     }
 });
+
+//GET WHERE IDS IN
+CustomProductShadeCodesRoute.route(path + '/where-ids-in').post(async (req, res) => {
+    try {
+        const db_version_id = req.body.db_version_id as string;
+        const ids = req.body.ids as string[];
+
+        const schema = new CustomProductShadeCodesSchema();
+        let shades = await schema.getWhereIdsIn(ids);
+
+        const dbSchema = new DBVersionsSchema();
+        const db = await dbSchema.get(db_version_id);
+
+        const pgSchema = new ProductGroupsSchema();
+        const pgs = await pgSchema.getByDBVersion(db_version_id);
+
+        const pSchmea = new ProductsSchema();
+        const ps = await pSchmea.getByDBVersion(db_version_id);
+
+        const pbSchema = new ProductBasesSchema();
+        const pbs = await pbSchema.getByDBVersion(db_version_id);
+
+        const spSchema = new SubProductsSchema();
+        const sps = await spSchema.getByDBVersion(db_version_id);
+        
+        const csSchema = new CanSizesSchema();
+        const css = await csSchema.getByDBVersion(db_version_id);
+
+        let result = DtoGetShadeCode.parseFromArray(shades, db, pgs, ps, pbs, sps, css);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(400).send(error);  
+    }
+});
+

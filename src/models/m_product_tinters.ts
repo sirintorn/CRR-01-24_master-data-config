@@ -29,6 +29,12 @@ export class ProductTintersSchema extends TableRecordsSchema{
     }
 
     update(id: any, data: ProductTinter): Promise<any>{
+        //return new Promise((resolve, reject) => {
+        //    const table = DB<ProductTinter>(this.tableName);
+        //    resolve(table.update(data)
+        //    .where('id', id)
+        //    .toQuery())
+        //});
         return super.update(id, data);
     }
 
