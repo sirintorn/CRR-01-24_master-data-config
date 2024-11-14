@@ -38,7 +38,7 @@ ProductBasesRoute.route(path).post(async (req, res) => {
         const data = req.body;
         const table = new ProductBasesSchema();
         const result1: any = await table.create(data);
-        const db_version_id = data.product_base_id;
+        const db_version_id = data.db_version_id;
         const product_base_id = result1[0].id;
 
         //also create productBasePricingMultiple
@@ -51,7 +51,10 @@ ProductBasesRoute.route(path).post(async (req, res) => {
             const record = canSizes[i];
             items.push(pbpS.generateRecord(db_version_id, product_base_id, record.id));
         }
-        const result2 = await pbpS.createMultiple(items);
+        let result2 = [];
+        if(items.length > 0){
+            result2 = await pbpS.createMultiple(items, true);
+        }
 
         const result = {
             product_base: result1,

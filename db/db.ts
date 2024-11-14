@@ -89,7 +89,9 @@ export class TableRecordsSchema{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
             //insert data and ask to return id[]
-            table.insert(data, ['id']).then((val) => {
+            table.insert(data)
+            .returning('*')
+            .then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);
@@ -105,7 +107,9 @@ export class TableRecordsSchema{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
             //insert data and ask to return id[]
-            table.insert(datas, ['id']).then((val) => {
+            table.insert(datas)
+            .returning('*')
+            .then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);
@@ -116,7 +120,10 @@ export class TableRecordsSchema{
     update(id: any, data: any): Promise<any>{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);
-            table.where('id', id).update(data, ['id', 'updated_by', 'updated_at']).then((val) => {
+            table.where('id', id)
+            .update(data)
+            .returning('*')
+            .then((val) => {
                 resolve(val);
             }).catch(error => {
                 reject(error);
@@ -166,7 +173,7 @@ export class TableRecordsSchema{
         return new Promise((resolve, reject) => {
             const chunkSize = 1000;
             DB.batchInsert(this.tableName, datas, chunkSize)
-            .returning('id')
+            .returning('*')
             .then((ids) => {
                 resolve(ids);
             }).catch(error => {

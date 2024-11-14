@@ -39,6 +39,7 @@ import { CTintingProfile } from "./c_tinting_profile";
 import { CMachine } from "./c_machine";
 import { CustomProductShadeCodesRoute } from "./r_custom_product_shade_codes";
 import { CustomProductTintersRoute } from "./r_custom_product_tinters";
+import { XBackupRestoreRoutes } from "./x_backup_restore";
 
 export const routes = Router();
 
@@ -97,6 +98,9 @@ routes.use(CustomProductTintersRoute);
 
 //special
 routes.use(XTempTest);
+
+//special 24
+routes.use(XBackupRestoreRoutes);
 
 
 //SHOULD BE ANOTHER MICRO SERVICE
