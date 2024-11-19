@@ -8,7 +8,7 @@ import { SubProduct } from "../models/m_sub_products";
 import { CustomProductShadeCode } from "../models/n_custom_product_shade_codes";
 import { DTO } from "./dto";
 
-export class DtoGetCustomShadeCode extends DTO {
+export class DtoCustomShadeCode extends DTO {
     shadeCode!: string;
     shadeName!: string;
 
@@ -17,7 +17,7 @@ export class DtoGetCustomShadeCode extends DTO {
     blue!: number;
 
     remark!: string;
-    createdAt!: Date;
+    createdAt!: any;
 
     id!: string;
     
@@ -27,6 +27,16 @@ export class DtoGetCustomShadeCode extends DTO {
     subProductName!: string;
     canSizeName!: string;
     productGroupName!: string;
+
+    customCanSizeMl?: number;
+
+    machineId?: string;
+    dbVersionId?: string;
+    productId?: string;
+    productBaseId?: string;
+    subProductId?: string;
+    canSizeId?: string;
+    productGroupId?: string;
 
     constructor(shade: CustomProductShadeCode, 
         dbVersion?: DBVersion, 
@@ -51,6 +61,15 @@ export class DtoGetCustomShadeCode extends DTO {
         this.subProductName = subProduct ? subProduct.name : '';
         this.canSizeName = canSize ? canSize.display_name : '';
         this.productGroupName = group ? group.name : '';
+        
+        this.machineId = shade.machine_id;
+        this.dbVersionId = shade.db_version_id;
+        this.productId = shade.product_id;
+        this.productBaseId = shade.product_base_id;
+        this.subProductId = shade.sub_product_id;
+        this.canSizeId = shade.can_size_id;
+        this.productGroupId = shade.product_group_id;
+        this.customCanSizeMl = shade.custom_can_size_ml;
     }
 
     static parseFromArray(
@@ -62,7 +81,7 @@ export class DtoGetCustomShadeCode extends DTO {
         subProducts: SubProduct[], 
         canSizes: CanSize[]
     ){
-        let arr: DtoGetCustomShadeCode[] = []
+        let arr: DtoCustomShadeCode[] = []
         for (let i = 0; i < shades.length; i++) {
             const item = shades[i];
 
@@ -86,7 +105,7 @@ export class DtoGetCustomShadeCode extends DTO {
                 if(value.id == item.can_size_id) return value;
             });
 
-            const dto = new DtoGetCustomShadeCode(
+            const dto = new DtoCustomShadeCode(
                 item, 
                 dbVersion, 
                 pg, 
@@ -97,6 +116,35 @@ export class DtoGetCustomShadeCode extends DTO {
             );
             arr.push(dto);
         }
+        return arr;
+    }
+
+    static reverseFromArray(
+        shades: DtoCustomShadeCode[]
+    ){
+        let arr: CustomProductShadeCode[] = [];
+
+        for (let i = 0; i < shades.length; i++) {
+            const item = shades[i];
+            const shade: CustomProductShadeCode = {
+                machine_id: item.machineId,
+                db_version_id: item.dbVersionId,
+                product_group_id: item.productGroupId,
+                product_id: item.productId,
+                shade_code: item.shadeCode,
+                shade_name: item.shadeName,
+                product_base_id: item.productBaseId,
+                sub_product_id: item.subProductId,
+                can_size_id: item.canSizeId,
+                custom_can_size_ml: item.customCanSizeMl ?? 0,
+                red: item.red,
+                green: item.green,
+                blue: item.blue,
+                remark: item.remark
+            };
+            arr.push(shade);
+        }
+
         return arr;
     }
 }

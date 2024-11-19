@@ -1,99 +1,37 @@
-import { CanSize } from "../models/m_can_sizes";
-import { DBVersion } from "../models/m_db_versions";
-import { ProductBase } from "../models/m_product_bases";
-import { ProductGroup } from "../models/m_product_groups";
-import { ProductShadeCode } from "../models/m_product_shade_codes";
-import { Product } from "../models/m_products";
-import { SubProduct } from "../models/m_sub_products";
+import { ProductTinter } from "../models/m_product_tinters";
 import { DTO } from "./dto";
 
-export class DtoGetShadeCode extends DTO {
-    shadeCode!: string;
-    shadeName!: string;
+export class DtoGetProductTinter extends DTO{
+    id?: any;
+    dbVersionId: any;
+    productShadeCodeId: any;
+    tinterCode: string;
+    amount: number;
+    sg: number;
+    red: number;
+    green: number;
+    blue: number;
+    createdAt!: any;
 
-    red!: number;
-    green!: number;
-    blue!: number;
-
-    remark!: string;
-    createdAt!: Date;
-
-    id!: string;
-    
-    dbVersionName!: string;
-    productName!: string;
-    productBaseName!: string;
-    subProductName!: string;
-    canSizeName!: string;
-    productGroupName!: string;
-
-    constructor(shade: ProductShadeCode, 
-        dbVersion?: DBVersion, 
-        group?: ProductGroup, 
-        product?: Product, 
-        base?: ProductBase, 
-        subProduct?: SubProduct, 
-        canSize?: CanSize
-    ){
+    constructor(tinter: ProductTinter){
         super();
-        this.id = shade.id;
-        this.shadeCode = shade.shade_code;
-        this.shadeName = shade.shade_name;
-        this.red = shade.red;
-        this.green = shade.green;
-        this.blue = shade.blue;
-        this.remark = shade.remark;
-        this.createdAt = new Date(shade.created_at);
-        this.dbVersionName = dbVersion ? dbVersion.name : '';
-        this.productName = product ? product.name : '';
-        this.productBaseName = base ? base.name : '';
-        this.subProductName = subProduct ? subProduct.name : '';
-        this.canSizeName = canSize ? canSize.display_name : '';
-        this.productGroupName = group ? group.name : '';
+        this.id = tinter.id;
+        this.dbVersionId = tinter.db_version_id;
+        this.productShadeCodeId = tinter.product_shade_code_id;
+        this.tinterCode = tinter.tinter_code;
+        this.amount = tinter.amount;
+        this.sg = tinter.sg;
+        this.red = tinter.red;
+        this.green = tinter.green;
+        this.blue = tinter.blue;
+        this.createdAt = tinter.created_at;
     }
 
-    static parseFromArray(
-        shades: ProductShadeCode[], 
-        dbVersion: DBVersion, 
-        groups: ProductGroup[], 
-        products: Product[], 
-        bases: ProductBase[], 
-        subProducts: SubProduct[], 
-        canSizes: CanSize[]
-    ){
-        let arr: DtoGetShadeCode[] = []
-        for (let i = 0; i < shades.length; i++) {
-            const item = shades[i];
-
-            const pg = groups.find((value) => {
-                if(value.id == item.product_group_id) return value;
-            });
-
-            const p = products.find((value) => {
-                if(value.id == item.product_id) return value;
-            });
-
-            const pb = bases.find((value) => {
-                if(value.id == item.product_base_id) return value;
-            });
-
-            const sp = subProducts.find((value) => {
-                if(value.id == item.sub_product_id) return value;
-            });
-            
-            const cs = canSizes.find((value) => {
-                if(value.id == item.can_size_id) return value;
-            });
-
-            const dto = new DtoGetShadeCode(
-                item, 
-                dbVersion, 
-                pg, 
-                p,
-                pb,
-                sp,
-                cs
-            );
+    static parseFromArray(tinters: ProductTinter[]): DtoGetProductTinter[]{
+        let arr: DtoGetProductTinter[] = [];
+        for (let i = 0; i < tinters.length; i++) {
+            const item = tinters[i];
+            const dto = new DtoGetProductTinter(item);
             arr.push(dto);
         }
         return arr;

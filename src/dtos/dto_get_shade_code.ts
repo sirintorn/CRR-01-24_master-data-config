@@ -16,7 +16,7 @@ export class DtoGetShadeCode extends DTO {
     blue!: number;
 
     remark!: string;
-    createdAt!: Date;
+    createdAt!: any;
 
     id!: string;
     
@@ -26,6 +26,13 @@ export class DtoGetShadeCode extends DTO {
     subProductName!: string;
     canSizeName!: string;
     productGroupName!: string;
+
+    dbVersionId?: string;
+    productId?: string;
+    productBaseId?: string;
+    subProductId?: string;
+    canSizeId?: string;
+    productGroupId?: string;
 
     constructor(shade: ProductShadeCode, 
         dbVersion?: DBVersion, 
@@ -50,6 +57,13 @@ export class DtoGetShadeCode extends DTO {
         this.subProductName = subProduct ? subProduct.name : '';
         this.canSizeName = canSize ? canSize.display_name : '';
         this.productGroupName = group ? group.name : '';
+
+        this.dbVersionId = shade.db_version_id;
+        this.productId = shade.product_id;
+        this.productBaseId = shade.product_base_id;
+        this.subProductId = shade.sub_product_id;
+        this.canSizeId = shade.can_size_id;
+        this.productGroupId = shade.product_group_id;
     }
 
     static parseFromArray(

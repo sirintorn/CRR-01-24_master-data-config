@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { ProductTinter, ProductTintersSchema } from "../models/m_product_tinters";
+import { DtoGetProductTinter } from "../dtos/dto_get_product_tinter";
 
 
 export const ProductTintersRoute = Router();
@@ -98,6 +99,21 @@ ProductTintersRoute.route(path + '/by-product-shade-code/:product_shade_code_id'
         res.status(400).send(error);
     }
 });
+
+///[DTO] GET BY PRODUCT SHADE CODE
+ProductTintersRoute.route(path + '/by-product-shade-code/:product_shade_code_id/dto').get(async (req, res) => {
+    try {
+        const product_shade_code_id = req.params.product_shade_code_id
+        const table = new ProductTintersSchema()
+        const result = await table.getByProductShadeCode(product_shade_code_id);
+        const result_final = DtoGetProductTinter.parseFromArray(result);
+
+        res.status(200).json(result_final);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
 
 ///CREATE MULTIPLE
 ProductTintersRoute.route(path + '/multiple/create').post(async (req, res) => {

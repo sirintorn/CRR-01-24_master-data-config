@@ -113,6 +113,20 @@ export class CustomProductTintersSchema extends TableRecordsSchema{
         });
     }
 
+    deleteByMachine(machine_id: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            const table = DB<CustomProductTinter>(this.tableName);
+            table.update({deleted_at: DB.fn.now()})
+            .where('machine_id', machine_id)
+            .where('deleted_at', null)
+            .then(val => {
+                resolve([]);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
     forceDeleteByDBVersion(db_version_id: any): Promise<any>{
         return new Promise((resolve, reject) => {
             const table = DB<any>(this.tableName);

@@ -42,7 +42,7 @@ export const TABLE_NAMES = {
 }
 
 export interface TableRecord{
-    id: any,
+    id?: any,
     created_by?: any,
     updated_by?: any,
     created_at?: any,
