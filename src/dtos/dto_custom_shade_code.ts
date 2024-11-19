@@ -72,6 +72,48 @@ export class DtoCustomShadeCode extends DTO {
         this.customCanSizeMl = shade.custom_can_size_ml;
     }
 
+    static parse(
+        shade: CustomProductShadeCode, 
+        dbVersion: DBVersion, 
+        groups: ProductGroup[], 
+        products: Product[], 
+        bases: ProductBase[], 
+        subProducts: SubProduct[], 
+        canSizes: CanSize[]
+    ){
+        const pg = groups.find((value) => {
+            if(value.id == shade.product_group_id) return value;
+        });
+
+        const p = products.find((value) => {
+            if(value.id == shade.product_id) return value;
+        });
+
+        const pb = bases.find((value) => {
+            if(value.id == shade.product_base_id) return value;
+        });
+
+        const sp = subProducts.find((value) => {
+            if(value.id == shade.sub_product_id) return value;
+        });
+        
+        const cs = canSizes.find((value) => {
+            if(value.id == shade.can_size_id) return value;
+        });
+
+        const dto = new DtoCustomShadeCode(
+            shade, 
+            dbVersion, 
+            pg, 
+            p,
+            pb,
+            sp,
+            cs
+        );
+
+        return dto;
+    }
+
     static parseFromArray(
         shades: CustomProductShadeCode[], 
         dbVersion: DBVersion, 

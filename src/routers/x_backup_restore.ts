@@ -25,6 +25,7 @@ XBackupRestoreRoutes.route(path + '/:target_machine').put(async (req, res) => {
             CREATE CustomProductTinters
         */
 
+        
         const customPSCSchema = new CustomProductShadeCodesSchema();
         const customPTSchema = new CustomProductTintersSchema();
 
@@ -48,11 +49,12 @@ XBackupRestoreRoutes.route(path + '/:target_machine').put(async (req, res) => {
 
         let cProdShades = DtoCustomShadeCode.reverseFromArray(customProductShades);
         const ids = await customPSCSchema.batchInsert(cProdShades, true);
-        ids.forEach((id, i) => {
-            cProdShades[i].id = id;
-            recognizer[i].new_id = id;
+        ids.forEach((item, i) => {
+            cProdShades[i].id = item.id;
+            recognizer[i].new_id = item.id;
         });
 
+        
         let cTinters: CustomProductTinter[] = [];
         for (let i = 0; i < recognizer.length; i++) {
             const item = recognizer[i];
@@ -65,10 +67,10 @@ XBackupRestoreRoutes.route(path + '/:target_machine').put(async (req, res) => {
         }
 
         const tids = await customPTSchema.batchInsert(cTinters, true);
-        tids.forEach((id, i) => {
-            cTinters[i].id = id;
-        });
-
+        tids.forEach((item, i) => {
+            cTinters[i].id = item.id;
+        }); 
+        
         recognizer.forEach(val => {
             val.tinters = [];
         });
@@ -76,8 +78,12 @@ XBackupRestoreRoutes.route(path + '/:target_machine').put(async (req, res) => {
         res.status(200).send({
             customProductShades: cProdShades,
             customProductTinters: cTinters,
+            //customProductShades: customProductShades,
+            //customProductTinters: customProductTinters,
             recognizer: recognizer
         });
+
+        //res.status(200).send()
     } catch (error) {
         res.status(400).send(error);
     }

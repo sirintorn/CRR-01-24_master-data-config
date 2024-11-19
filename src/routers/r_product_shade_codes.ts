@@ -38,6 +38,48 @@ ProductShadeCodesRoute.route(path + '/:id').get(async (req, res) => {
     }
 });
 
+//[DTO] GET
+ProductShadeCodesRoute.route(path + '/:id/dto').get(async (req, res) => {
+    try {
+        const id = req.params.id;
+        const table = new ProductShadeCodesSchema();
+        const result: ProductShadeCode = await table.get(id);
+
+        const dbVersionSchema = new DBVersionsSchema();
+        const db = await dbVersionSchema.get(result.db_version_id);
+
+        const pgSchema = new ProductGroupsSchema();
+        const pgs = await pgSchema.getByDBVersion(result.db_version_id);
+
+        const pSchmea = new ProductsSchema();
+        const ps = await pSchmea.getByDBVersion(result.db_version_id);
+
+        const pbSchema = new ProductBasesSchema();
+        const pbs = await pbSchema.getByDBVersion(result.db_version_id);
+
+        const spSchema = new SubProductsSchema();
+        const sps = await spSchema.getByDBVersion(result.db_version_id);
+        
+        const csSchema = new CanSizesSchema();
+        const css = await csSchema.getByDBVersion(result.db_version_id);
+
+        const dto: DtoGetShadeCode = DtoGetShadeCode.parse(
+            result,
+            db,
+            pgs,
+            ps,
+            pbs,
+            sps,
+            css
+        );
+
+        if(result)res.status(200).json(dto);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
 //CREATE
 ProductShadeCodesRoute.route(path).post(async (req, res) => {
     try {

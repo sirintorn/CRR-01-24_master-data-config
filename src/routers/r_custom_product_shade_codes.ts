@@ -10,6 +10,7 @@ import { CustomProductShadeCode, CustomProductShadeCodesSchema } from "../models
 import { PaginationConfig, SearchFilters } from "../models/m_product_shade_codes";
 import { CustomProductTinter, CustomProductTintersSchema } from "../models/n_custom_product_tinters";
 import { DtoCreateCustomShadeCode } from "../dtos/dto_create_custom_shade_code";
+import { DtoCustomShadeCode } from "../dtos/dto_custom_shade_code";
 
 
 export const CustomProductShadeCodesRoute = Router();
@@ -34,6 +35,48 @@ CustomProductShadeCodesRoute.route(path + '/:id').get(async (req, res) => {
         const table = new CustomProductShadeCodesSchema();
         const result: CustomProductShadeCode = await table.get(id);
         if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+//[DTO] GET
+CustomProductShadeCodesRoute.route(path + '/:id/dto').get(async (req, res) => {
+    try {
+        const id = req.params.id;
+        const table = new CustomProductShadeCodesSchema();
+        const result: CustomProductShadeCode = await table.get(id);
+
+        const dbVersionSchema = new DBVersionsSchema();
+        const db = await dbVersionSchema.get(result.db_version_id);
+
+        const pgSchema = new ProductGroupsSchema();
+        const pgs = await pgSchema.getByDBVersion(result.db_version_id);
+
+        const pSchmea = new ProductsSchema();
+        const ps = await pSchmea.getByDBVersion(result.db_version_id);
+
+        const pbSchema = new ProductBasesSchema();
+        const pbs = await pbSchema.getByDBVersion(result.db_version_id);
+
+        const spSchema = new SubProductsSchema();
+        const sps = await spSchema.getByDBVersion(result.db_version_id);
+        
+        const csSchema = new CanSizesSchema();
+        const css = await csSchema.getByDBVersion(result.db_version_id);
+
+        const dto: DtoCustomShadeCode = DtoCustomShadeCode.parse(
+            result, 
+            db,
+            pgs,
+            ps,
+            pbs,
+            sps,
+            css
+        );
+
+        if(result)res.status(200).json(dto);   
         else res.status(404).send();
     } catch (error: any) {
         res.status(400).send(error);
