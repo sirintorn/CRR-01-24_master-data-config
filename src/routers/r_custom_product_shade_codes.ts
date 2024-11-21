@@ -508,6 +508,44 @@ CustomProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id/by-mach
     }
 });
 
+//DTO2 Version
+CustomProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id/by-machine/:machine_id/dto2').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+        const machine_id = req.params.machine_id;
+
+        const table = new CustomProductShadeCodesSchema();
+        const items: any[]  = await table.getByDBVersionAndMachine(db_version_id, machine_id);
+
+        const dbVersionSchema = new DBVersionsSchema();
+        const db = await dbVersionSchema.get(db_version_id);
+
+        const pgSchema = new ProductGroupsSchema();
+        const pgs = await pgSchema.getByDBVersion(db_version_id);
+
+        const pSchmea = new ProductsSchema();
+        const ps = await pSchmea.getByDBVersion(db_version_id);
+
+        const pbSchema = new ProductBasesSchema();
+        const pbs = await pbSchema.getByDBVersion(db_version_id);
+
+        const spSchema = new SubProductsSchema();
+        const sps = await spSchema.getByDBVersion(db_version_id);
+        
+        const csSchema = new CanSizesSchema();
+        const css = await csSchema.getByDBVersion(db_version_id);
+
+        const dtos = DtoGetShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
+
+        const result = dtos;
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});
+
+
 //CREATE SMART DTO
 CustomProductShadeCodesRoute.route(path + '/dto/create').post(async (req, res) => {
     try {

@@ -172,3 +172,21 @@ CustomProductTintersRoute.route(path + '/by-product-shade-code/:product_shade_co
         res.status(400).send(error);
     }
 });
+
+//[DTO] GET BY DB VERSION & MACHINE
+CustomProductTintersRoute.route(path + '/by-db-version/:db_version_id/by-machine/:machine_id/dto').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id;
+        const machine_id = req.params.machine_id;
+
+        const table = new CustomProductTintersSchema();
+        const items: any[]  = await table.getByDBVersionAndMachine(db_version_id, machine_id);
+
+        const result = DtoCustomProductTinter.parseFromArray(items);
+
+        if(result)res.status(200).json(result);   
+        else res.status(404).send();
+    } catch (error: any) {
+        res.status(400).send(error);
+    }
+});

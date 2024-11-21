@@ -139,6 +139,21 @@ export class CustomProductTintersSchema extends TableRecordsSchema{
             });
         });
     }
+
+    getByDBVersionAndMachine(db_version_id: any, machine_id: any): Promise<CustomProductTinter[]>{
+        return new Promise((resolve, reject) => {
+            const table = DB<CustomProductTinter>(this.tableName);
+            table.select('*')
+            .where('deleted_at', null)
+            .where('db_version_id', db_version_id)
+            .where('machine_id', machine_id)
+            .then(vals => {
+                resolve(vals);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }
 
 
