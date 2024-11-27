@@ -162,14 +162,15 @@ export class DtoCustomShadeCode extends DTO {
     }
 
     static reverseFromArray(
-        shades: DtoCustomShadeCode[]
+        shades: DtoCustomShadeCode[],
+        machine_id: string
     ){
         let arr: CustomProductShadeCode[] = [];
 
         for (let i = 0; i < shades.length; i++) {
             const item = shades[i];
             const shade: CustomProductShadeCode = {
-                machine_id: item.machineId,
+                machine_id: machine_id,
                 db_version_id: item.dbVersionId,
                 product_group_id: item.productGroupId,
                 product_id: item.productId,

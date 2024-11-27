@@ -47,7 +47,7 @@ XBackupRestoreRoutes.route(path + '/:target_machine').put(async (req, res) => {
             shade.machineId = target_machine;
         }
 
-        let cProdShades = DtoCustomShadeCode.reverseFromArray(customProductShades);
+        let cProdShades = DtoCustomShadeCode.reverseFromArray(customProductShades, target_machine);
         const ids = await customPSCSchema.batchInsert(cProdShades, true);
         ids.forEach((item, i) => {
             cProdShades[i].id = item.id;
@@ -62,7 +62,7 @@ XBackupRestoreRoutes.route(path + '/:target_machine').put(async (req, res) => {
                 let tinter = item.tinters[k];
                 tinter.productShadeCodeId = item.new_id;
             }
-            const tints = DtoCustomProductTinter.reverseFromArray(item.tinters);
+            const tints = DtoCustomProductTinter.reverseFromArray(item.tinters, target_machine);
             cTinters.push(...tints);
         }
 
@@ -88,3 +88,7 @@ XBackupRestoreRoutes.route(path + '/:target_machine').put(async (req, res) => {
         res.status(400).send(error);
     }
 });
+
+
+
+

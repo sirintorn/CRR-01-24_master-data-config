@@ -39,12 +39,15 @@ export class DtoCustomProductTinter extends DTO{
         return arr;
     }
 
-    static reverseFromArray(tinters: DtoCustomProductTinter[]): CustomProductTinter[]{
+    static reverseFromArray(
+        tinters: DtoCustomProductTinter[],         
+        machine_id: string
+    ): CustomProductTinter[]{
         let arr: CustomProductTinter[] = [];
         for (let i = 0; i < tinters.length; i++) {
             const item = tinters[i];
             const tint: CustomProductTinter = {
-                machine_id: item.machineId, //indicator to its creator
+                machine_id: machine_id, //indicator to its creator
                 db_version_id: item.dbVersionId,
                 product_shade_code_id: item.productShadeCodeId,
                 tinter_code: item.tinterCode,
