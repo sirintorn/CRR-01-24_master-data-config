@@ -41,7 +41,18 @@ const config: { [key: string]: Knex.Config } = {
       max: 10
     },
     migrations: {
-      tableName: "knex_migrations"
+      directory: './db/migrations'
+    }
+  },
+  production_cn: {
+    client: 'pg',
+    connection: process.env.DB_PROD_CN_URL,
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      directory: './db/migrations'
     }
   }
 

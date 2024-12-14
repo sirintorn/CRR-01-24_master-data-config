@@ -1,7 +1,7 @@
 services:
   api:
     restart: always
-    image: master-data-config
+    image: master-data-config-cn
     ports:
       - 4000:4000
     command: node ./src/index.js

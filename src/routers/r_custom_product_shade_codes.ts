@@ -4,7 +4,6 @@ import { ProductsSchema } from "../models/m_products";
 import { ProductBasesSchema } from "../models/m_product_bases";
 import { SubProductsSchema } from "../models/m_sub_products";
 import { CanSizesSchema } from "../models/m_can_sizes";
-import { DtoGetShadeCode } from "../dtos/dto_get_shade_code";
 import { DBVersionsSchema } from "../models/m_db_versions";
 import { CustomProductShadeCode, CustomProductShadeCodesSchema } from "../models/n_custom_product_shade_codes";
 import { PaginationConfig, SearchFilters } from "../models/m_product_shade_codes";
@@ -278,7 +277,7 @@ CustomProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id/dto').g
         const csSchema = new CanSizesSchema();
         const css = await csSchema.getByDBVersion(db_version_id);
 
-        const dtos = DtoGetShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
+        const dtos = DtoCustomShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
 
         const result = {
             items: dtos,
@@ -493,7 +492,7 @@ CustomProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id/by-mach
         const csSchema = new CanSizesSchema();
         const css = await csSchema.getByDBVersion(db_version_id);
 
-        const dtos = DtoGetShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
+        const dtos = DtoCustomShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
 
         const result = {
             items: dtos,
@@ -535,7 +534,7 @@ CustomProductShadeCodesRoute.route(path + '/by-db-version/:db_version_id/by-mach
         const csSchema = new CanSizesSchema();
         const css = await csSchema.getByDBVersion(db_version_id);
 
-        const dtos = DtoGetShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
+        const dtos = DtoCustomShadeCode.parseFromArray(items, db, pgs, ps, pbs, sps, css);
 
         const result = dtos;
         if(result)res.status(200).json(result);   
@@ -638,7 +637,7 @@ CustomProductShadeCodesRoute.route(path + '/where-ids-in').post(async (req, res)
         const csSchema = new CanSizesSchema();
         const css = await csSchema.getByDBVersion(db_version_id);
 
-        let result = DtoGetShadeCode.parseFromArray(shades, db, pgs, ps, pbs, sps, css);
+        let result = DtoCustomShadeCode.parseFromArray(shades, db, pgs, ps, pbs, sps, css);
         res.status(200).send(result);
     } catch (error) {
         res.status(400).send(error);  
