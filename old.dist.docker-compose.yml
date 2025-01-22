@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  api:
+    container_name: crr-01-24-master-data-config
+    restart: always
+    build:
+      context: .
+      target: production
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - 4000:4000
+    command: node ./src/index.js

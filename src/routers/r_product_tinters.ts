@@ -114,6 +114,34 @@ ProductTintersRoute.route(path + '/by-product-shade-code/:product_shade_code_id/
     }
 });
 
+///GET BY DB VERSION
+ProductTintersRoute.route(path + '/by-db-version/:db_version_id').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id
+        const table = new ProductTintersSchema()
+        const result = await table.getByDBVersion(db_version_id);
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
+
+///[DTO] GET BY DB VERSION
+ProductTintersRoute.route(path + '/by-db-version/:db_version_id/dto').get(async (req, res) => {
+    try {
+        const db_version_id = req.params.db_version_id
+        const table = new ProductTintersSchema()
+        const result = await table.getByDBVersion(db_version_id);
+        const result_final = DtoGetProductTinter.parseFromArray(result);
+
+        res.status(200).json(result_final);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
 
 ///CREATE MULTIPLE
 ProductTintersRoute.route(path + '/multiple/create').post(async (req, res) => {
